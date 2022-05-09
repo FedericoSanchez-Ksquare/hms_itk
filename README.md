@@ -5,7 +5,7 @@
 ### User Models
 
 User model is necessary to define the properties of all general user
-that will use the system
+that will use the system and will define its role in the system as in patient, doctor or admin
 
 ```ts
 interface User {
@@ -14,12 +14,13 @@ interface User {
   lastName: string; //varchar 100
   password: string; //varchar 100
   email: string; // varchar 100
+  role: string; // varchar 100
 }
 ```
 
 ### Patient Models
 
-Added a Patient Model that will esxted properties from User, this will help define a patient in more specified way
+Added a Patient Model that will esxted properties from User, this will help define a patient in more specific way
 
 ```ts
 interface Patient extends User {
@@ -64,8 +65,6 @@ interface Appointments {
 This Model exists just to define a User as an admin if necessary for greater control of the system
 
 ```ts
-//this could also be a boolean property from user that if true has the admin privilieges or false making him a normal user in terms of permissions as in either doctor or patient, but big question mark as if this is good or not
-// on the meanwhile, Admin will be a really simple interface
 interface Admin extends User {
   adminId: int;
 }

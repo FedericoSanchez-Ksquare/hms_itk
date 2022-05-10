@@ -10,26 +10,35 @@ that will use the system and will define its role in the system as in patient, d
 ```ts
 interface User {
   userId: int;
-  name: string; //varchar 100
+  firstName: string; //varchar 100
   lastName: string; //varchar 100
   password: string; //varchar 100
   email: string; // varchar 100
-  role: string; // varchar 100
+  roleId: int;
 }
+```
+
+### Role Models
+
+With this Role Model we will asign an specific role any user created being either a patient, a doctor or an admin
+
+```ts
+interface Role {
+  roleId: int;
+  role: string; //varchar(100)
 ```
 
 ### Patient Models
 
-Added a Patient Model that will esxted properties from User, this will help define a patient in more specific way
+Added a Patient Model that will extend properties from User, this will help define a patient in more specific way
 
 ```ts
 interface Patient extends User {
   patientId: int;
   birth: string; // date 100
-  age: number; //int 100
   weigth: number; //int 100
   height: number; // int 100
-  gender: string; // varchar 100
+  gender: enum; // varchar 100
   address: string; // varchar 200
 }
 ```
@@ -42,7 +51,7 @@ and for creating and showing their upcoming appointments, this Doctor interface 
 ```ts
 interface Doctor extends User {
   doctorId: int;
-  medicalSpeciality: string; // varchar 200
+  medicalSpeciality: enum; // varchar 200
 }
 ```
 
@@ -55,8 +64,8 @@ interface Appointments {
   appointmentId: int;
   appointmentDate: string; // date 100
   appointmentDetails: string; // varchar 300
-  appointedDoctor: string; // varchar 100
-  appointedPatient: string; // varchar 100
+  doctorId: int;
+  patientId: int;
 }
 ```
 

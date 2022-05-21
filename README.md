@@ -26,6 +26,7 @@ With this Role Model we will asign an specific role any user created being eithe
 interface Role {
   roleId: int;
   role: string; //varchar(100)
+}
 ```
 
 ### Patient Models

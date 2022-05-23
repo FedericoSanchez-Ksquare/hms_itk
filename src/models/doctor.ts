@@ -5,7 +5,7 @@ import { user } from './user';
 export class doctor extends Model <InferAttributes<doctor>,InferCreationAttributes<doctor>>{
     declare id: CreationOptional<number>;
     declare medicalSpeciality: string;
-    userId?: number;
+    declare userId: string;
 }
 
 
@@ -17,13 +17,15 @@ export const initDoctorModel = (sequelize: Sequelize) =>{
         primaryKey: true,
         },
         medicalSpeciality:{
-            type: new DataTypes.STRING(100),
+            type: DataTypes.STRING(100),
             allowNull: false
         },
+        userId:{
+            type: DataTypes.STRING(100)
+        }
 
     },{
         tableName: 'doctor',
         sequelize: sequelize
     })
-    doctor.belongsTo(user)
 }

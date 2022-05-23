@@ -15,11 +15,19 @@ const initAppointmentsModel = (sequelize) => {
             primaryKey: true,
         },
         appointmentDate: {
-            type: new sequelize_1.DataTypes.STRING(100),
+            type: sequelize_1.DataTypes.STRING(100),
+            allowNull: false
+        },
+        appointmentTime: {
+            type: sequelize_1.DataTypes.STRING(100),
             allowNull: false
         },
         appointmentDetails: {
-            type: new sequelize_1.DataTypes.STRING(100),
+            type: sequelize_1.DataTypes.STRING(100),
+            allowNull: false
+        },
+        is_deleted: {
+            type: sequelize_1.DataTypes.STRING(100),
             allowNull: false
         },
     }, {

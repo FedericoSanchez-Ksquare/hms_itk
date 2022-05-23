@@ -12,4 +12,3 @@ RolesRouter.post("/createRole", async (req: Request, res: Response) => {
     id: newRoleId,
   });
 });
-

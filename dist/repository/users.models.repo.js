@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readUsers = exports.createUser = void 0;
+exports.disableUsers = exports.readUsers = exports.createUser = void 0;
 const user_1 = require("../models/user");
 const createUser = (firstName, lastName, password, email, is_active, roleId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -40,3 +40,13 @@ const readUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.readUsers = readUsers;
+const disableUsers = (id, is_active) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const disablePatient = yield user_1.user.update({ is_active: is_active }, { where: { id } });
+        return disablePatient;
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.disableUsers = disableUsers;

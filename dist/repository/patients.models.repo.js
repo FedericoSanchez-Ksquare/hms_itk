@@ -14,7 +14,7 @@ const patient_1 = require("../models/patient");
 const createPatient = (birth, weigth, height, gender, address, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newPatient = yield patient_1.patient.create({
-            birth, weigth, height, gender, address, userId
+            birth, weigth, height, gender, address, userId // esto es UID DE FIREBASE
         });
         console.log("Patient created with id= " + newPatient.id);
         return newPatient.id;

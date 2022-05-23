@@ -1,10 +1,11 @@
+import { where } from "sequelize/types";
 import { patient } from "../models/patient";
 import { roles } from "../models/roles";
 
-export const createPatient = async (birth: string, weigth: number, height: number, gender: string, address:string, userId: number ) => {
+export const createPatient = async (birth: string, weigth: number, height: number, gender: string, address:string, userId: string ) => {
   try {
     const newPatient = await patient.create({
-      birth, weigth, height, gender, address, userId
+      birth, weigth, height, gender, address, userId// esto es UID DE FIREBASE
     });
     console.log("Patient created with id= "+newPatient.id);
     return newPatient.id;

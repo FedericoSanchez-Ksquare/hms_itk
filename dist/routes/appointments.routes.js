@@ -12,10 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppointmentRouter = void 0;
 const express_1 = require("express");
 const appointments_models_repo_1 = require("../repository/appointments.models.repo");
+const hasRoles_1 = require("../middlewares/hasRoles");
+const isAuthenticated_1 = require("../middlewares/isAuthenticated");
 exports.AppointmentRouter = (0, express_1.Router)();
 exports.AppointmentRouter.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { appointmentDate, appointmentDetails, patientId, doctorId } = req.body;
-    const newAppointmentId = yield (0, appointments_models_repo_1.createAppointments)(appointmentDate, appointmentDetails, patientId, doctorId);
+    const { appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId } = req.body;
+    const newAppointmentId = yield (0, appointments_models_repo_1.createAppointments)(appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId);
     res.statusCode = 201;
     res.send({
         id: newAppointmentId,
@@ -26,5 +28,66 @@ exports.AppointmentRouter.get("/read", (req, res) => __awaiter(void 0, void 0, v
     res.statusCode = 201;
     res.json({
         appointment: readAppointment,
+    });
+}));
+exports.AppointmentRouter.get("/:userId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    const { patientId, doctorId } = req.body;
+    const readAppointment = yield (0, appointments_models_repo_1.readAppointmentsPatient)(userId, patientId, doctorId);
+    res.statusCode = 201;
+    res.json({
+        desc: readAppointment,
+    });
+}));
+exports.AppointmentRouter.get("/readListPatient", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { patientId, doctorId } = req.body;
+    const listAppointment = yield (0, appointments_models_repo_1.listAppointmentsPatient)(patientId, doctorId);
+    res.statusCode = 201;
+    res.json({
+        desc: listAppointment,
+    });
+}));
+//No se que hice aqui pero esta embrujado y siempre busca al fantasma de
+// patientid y le vale el doctorid
+// AppointmentRouter.get("/readDoctor",
+// isAuthenticated,
+// hasRole(
+//   {roles: ["admin"],
+//    allowSameUser:true}), async (req: Request, res: Response) => {
+//   const { doctorId } = req.body;
+//   const readAppointmentDoctors = await readAppointmentsDoctor(doctorId)
+//   res.statusCode = 201;
+//   res.json({
+//     desc: readAppointmentDoctors,
+//   });
+// });
+// AppointmentRouter.get("/listDoctor",
+// isAuthenticated,
+// hasRole(
+//   {roles: ["admin"],
+//    allowSameUser:true}),  async (req: Request, res: Response) => {
+//   const { doctorId } = req.body;
+//   const listAppointmentsDoctors = await listAppointmentsDoctor(doctorId)
+//   res.statusCode = 201;
+//   res.json({
+//     appointmentDoctor: listAppointmentsDoctors,
+//   });
+// });
+exports.AppointmentRouter.patch("/updateTime", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, appointmentDate, appointmentTime } = req.body;
+    const updatedTime = yield (0, appointments_models_repo_1.updatesTime)(id, appointmentDate, appointmentTime);
+    res.statusCode = 201;
+    res.send({
+        id: updatedTime,
+    });
+}));
+exports.AppointmentRouter.patch("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, is_deleted } = req.body;
+    const deleted = yield (0, appointments_models_repo_1.deleteAppointments)(id, is_deleted);
+    res.statusCode = 201;
+    res.send({
+        id: deleted,
     });
 }));

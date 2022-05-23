@@ -9,7 +9,7 @@ export class patient extends Model <InferAttributes<patient>,InferCreationAttrib
     declare height: number;
     declare gender: string;
     declare address: string;
-    userId?: number;
+    declare userId: string;
 }
 
 
@@ -21,7 +21,7 @@ export const initPatientModel = (sequelize: Sequelize) =>{
         primaryKey: true,
         },
         birth:{
-            type: new DataTypes.STRING(100),
+            type: DataTypes.STRING(100),
             allowNull: false
         },
         weigth: {
@@ -31,16 +31,18 @@ export const initPatientModel = (sequelize: Sequelize) =>{
             type: DataTypes.INTEGER
         },
         gender:{
-            type: new DataTypes.STRING(100),
+            type: DataTypes.STRING(100),
         },
         address:{
-            type: new DataTypes.STRING(100),
+            type: DataTypes.STRING(100),
         },
-        
+        userId:{
+            type: DataTypes.STRING(100)
+        }
     },{
         tableName: 'patients',
         sequelize: sequelize
     })
     //patient.hasOne(user, { foreignKey: 'userid' })
-    patient.belongsTo(user)
+    
 }

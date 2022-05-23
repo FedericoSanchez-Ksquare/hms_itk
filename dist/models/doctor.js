@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initDoctorModel = exports.doctor = void 0;
 const sequelize_1 = require("sequelize");
-const user_1 = require("./user");
 class doctor extends sequelize_1.Model {
 }
 exports.doctor = doctor;
@@ -14,13 +13,15 @@ const initDoctorModel = (sequelize) => {
             primaryKey: true,
         },
         medicalSpeciality: {
-            type: new sequelize_1.DataTypes.STRING(100),
+            type: sequelize_1.DataTypes.STRING(100),
             allowNull: false
         },
+        userId: {
+            type: sequelize_1.DataTypes.STRING(100)
+        }
     }, {
         tableName: 'doctor',
         sequelize: sequelize
     });
-    doctor.belongsTo(user_1.user);
 };
 exports.initDoctorModel = initDoctorModel;

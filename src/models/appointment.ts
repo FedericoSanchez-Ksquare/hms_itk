@@ -7,6 +7,8 @@ export class appointment extends Model <InferAttributes<appointment>,InferCreati
     declare id: CreationOptional<number>;
     declare appointmentDate: string;
     declare appointmentDetails: string;
+    declare appointmentTime: string;
+    declare is_deleted: boolean;
     patientId?: number;
     doctorId?: number;
 }
@@ -19,11 +21,19 @@ export const initAppointmentsModel = (sequelize: Sequelize) =>{
         primaryKey: true,
         },
         appointmentDate:{
-            type: new DataTypes.STRING(100),
+            type: DataTypes.STRING(100),
+            allowNull: false
+        },
+        appointmentTime:{
+            type: DataTypes.STRING(100),
             allowNull: false
         },
         appointmentDetails:{
-            type: new DataTypes.STRING(100),
+            type: DataTypes.STRING(100),
+            allowNull: false
+        },
+        is_deleted:{
+            type: DataTypes.STRING(100),
             allowNull: false
         },
     },{

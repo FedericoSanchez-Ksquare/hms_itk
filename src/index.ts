@@ -6,8 +6,10 @@ import { AppointmentRouter } from "./routes/appointments.routes";
 import { DoctorRouter} from "./routes/doctors.routes";
 import { PatientRouter } from "./routes/patients.routes";
 import { RolesRouter } from "./routes/roles.routes";
+import * as admin from "firebase-admin"
 import  { roles }  from './models/roles'
 dotenv.config();
+admin.initializeApp();
 
 //inicar sequelize primero y luego la api
 

@@ -37,12 +37,15 @@ exports.UserRouter.post("/createUser", (req, res) => __awaiter(void 0, void 0, v
         id: newUserId,
     });
 }));
-exports.UserRouter.get("/showUser", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const readUser = yield (0, users_models_repo_1.readUsers)(req.body.id);
-    res.statusCode = 201;
-    res.json({
-        users: readUser,
-    });
+exports.UserRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield (0, methods_1.getAllUsers)();
+        res.status(200).send(users);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "something went wrong" });
+    }
 }));
 exports.UserRouter.delete("/:userId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {

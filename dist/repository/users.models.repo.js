@@ -24,16 +24,10 @@ const createUser = (firstName, lastName, password, email, is_active, roleId) => 
     }
 });
 exports.createUser = createUser;
-const readUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const readUsers = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (id) {
-            const readUser = yield user_1.user.findByPk(id);
-            return readUser;
-        }
-        else {
-            const readUser = yield user_1.user.findAll();
-            return readUser;
-        }
+        const readUser = yield user_1.user.findAll();
+        return readUser;
     }
     catch (error) {
         console.log(error);

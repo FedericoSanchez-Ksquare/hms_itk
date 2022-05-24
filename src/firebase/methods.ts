@@ -40,4 +40,16 @@ export const disableUserFB = async (uid: string, disabled: boolean) => {
   return mapToUser(user);
 };
 
+export const readUser = async (userId: string) => {
+  const user = await admin.auth().getUser(userId);
+
+  return mapToUser(user);
+};
+
+export const getAllUsers = async () => {
+  const listAllMyUsers = await admin.auth().listUsers(10);
+  const users = listAllMyUsers.users.map(mapToUser);
+
+  return users;
+};
 

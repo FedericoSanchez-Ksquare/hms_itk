@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { createUser,readUsers,disableUsers } from "../repository/users.models.repo";
-import {createUserFB, disableUserFB} from "../firebase/methods";
+import {createUserFB, disableUserFB, getAllUsers} from "../firebase/methods";
 import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
@@ -10,7 +10,7 @@ UserRouter.post("/createUserFB", async (req: Request, res: Response) => {
   const { displayName,email,password,role } = req.body;
   
   try {
-    const newUserId = await createUserFB(displayName,email, password,role,false );
+    const newUserId = await createUserFB(displayName,email, password,role, false );
     
     res.statusCode = 201;
     res.send({
@@ -32,14 +32,18 @@ UserRouter.post("/createUser", async (req: Request, res: Response) => {
   });
 });
 
-UserRouter.get("/showUser", async (req: Request, res: Response) => {
-  const readUser = await readUsers(req.body.id)
-  res.statusCode = 201;
-  res.json({
-    users: readUser,
-  });
-});
-
+UserRouter.get(
+  "/",
+  async (req: Request, res: Response) => {
+    try {
+      const users = await getAllUsers();
+      res.status(200).send(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "something went wrong" });
+    }
+  }
+);
 UserRouter.delete("/:userId", 
 isAuthenticated,
 hasRole(

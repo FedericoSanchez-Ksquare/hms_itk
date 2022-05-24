@@ -30,11 +30,11 @@ exports.AppointmentRouter.get("/read", (req, res) => __awaiter(void 0, void 0, v
         appointment: readAppointment,
     });
 }));
-exports.AppointmentRouter.get("/:userId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.AppointmentRouter.get("/findAppointment", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     const { patientId, doctorId } = req.body;
-    const readAppointment = yield (0, appointments_models_repo_1.readAppointmentsPatient)(userId, patientId, doctorId);
+    const readAppointment = yield (0, appointments_models_repo_1.readAppointmentsPatient)(userId, patientId);
     res.statusCode = 201;
     res.json({
         desc: readAppointment,
@@ -42,8 +42,8 @@ exports.AppointmentRouter.get("/:userId", isAuthenticated_1.isAuthenticated, (0,
 }));
 exports.AppointmentRouter.get("/readListPatient", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { patientId, doctorId } = req.body;
-    const listAppointment = yield (0, appointments_models_repo_1.listAppointmentsPatient)(patientId, doctorId);
+    const { patientId } = req.body;
+    const listAppointment = yield (0, appointments_models_repo_1.listAppointmentsPatient)(patientId);
     res.statusCode = 201;
     res.json({
         desc: listAppointment,
@@ -51,30 +51,24 @@ exports.AppointmentRouter.get("/readListPatient", isAuthenticated_1.isAuthentica
 }));
 //No se que hice aqui pero esta embrujado y siempre busca al fantasma de
 // patientid y le vale el doctorid
-// AppointmentRouter.get("/readDoctor",
-// isAuthenticated,
-// hasRole(
-//   {roles: ["admin"],
-//    allowSameUser:true}), async (req: Request, res: Response) => {
-//   const { doctorId } = req.body;
-//   const readAppointmentDoctors = await readAppointmentsDoctor(doctorId)
-//   res.statusCode = 201;
-//   res.json({
-//     desc: readAppointmentDoctors,
-//   });
-// });
-// AppointmentRouter.get("/listDoctor",
-// isAuthenticated,
-// hasRole(
-//   {roles: ["admin"],
-//    allowSameUser:true}),  async (req: Request, res: Response) => {
-//   const { doctorId } = req.body;
-//   const listAppointmentsDoctors = await listAppointmentsDoctor(doctorId)
-//   res.statusCode = 201;
-//   res.json({
-//     appointmentDoctor: listAppointmentsDoctors,
-//   });
-// });
+exports.AppointmentRouter.get("/readDoctor", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { doctorId } = req.body;
+    const readAppointmentDoctors = yield (0, appointments_models_repo_1.readAppointmentsDoctor)(doctorId);
+    res.statusCode = 201;
+    res.json({
+        desc: readAppointmentDoctors,
+    });
+}));
+exports.AppointmentRouter.get("/listDoctor", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { doctorId } = req.body;
+    const listAppointmentsDoctors = yield (0, appointments_models_repo_1.listAppointmentsDoctor)(doctorId);
+    res.statusCode = 201;
+    res.json({
+        appointmentDoctor: listAppointmentsDoctors,
+    });
+}));
 exports.AppointmentRouter.patch("/updateTime", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, appointmentDate, appointmentTime } = req.body;
     const updatedTime = yield (0, appointments_models_repo_1.updatesTime)(id, appointmentDate, appointmentTime);

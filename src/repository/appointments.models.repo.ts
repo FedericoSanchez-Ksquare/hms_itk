@@ -30,18 +30,12 @@ export const readAppointments = async(
 export const readAppointmentsPatient = async(
   userId: string,
   patientId: number,
-  doctorId: number
 ) => {
   try {
     if(patientId){
     const readOneAppointmentP = await appointment.findOne({where: {patientId:patientId}});
     return readOneAppointmentP 
     }
-    if (doctorId) {
-      const readOneAppointmentP = await appointment.findOne({where: {doctorId:doctorId}});
-    return readOneAppointmentP 
-    }
-
   } catch (error) {
     console.log(error)
   }
@@ -49,18 +43,13 @@ export const readAppointmentsPatient = async(
 
 export const listAppointmentsPatient = async(
   patientId: number,
-  doctorId: number
 ) => {
   try {
     if (patientId) {
       const readAllAppointmentsP = await appointment.findAll({where: {patientId:patientId}});
       return readAllAppointmentsP
     }
-    if (doctorId) {
-      const readAllAppointmentsP = await appointment.findAll({where: {doctorId:doctorId}});
-      return readAllAppointmentsP
-    }
-    
+  
   } catch (error) {
     console.log(error)
   }
@@ -68,27 +57,27 @@ export const listAppointmentsPatient = async(
 
 //mas brujeria
 
-// export const readAppointmentsDoctor = async(
-//   doctorId: number
-// ) => {
-//   try {
-//     const readOneAppointmentD = await appointment.findOne({where: {doctorId:doctorId}});
-//     return readOneAppointmentD
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
+export const readAppointmentsDoctor = async(
+  doctorId: number
+) => {
+  try {
+    const readOneAppointmentD = await appointment.findOne({where: {doctorId:doctorId}});
+    return readOneAppointmentD
+  } catch (error) {
+    console.log(error)
+  }
+}
 
-// export const listAppointmentsDoctor = async(
-//   doctorId: number
-// ) => {
-//   try {
-//     const listAllAppointmentsD = await appointment.findAll({where: {doctorId:doctorId}});
-//     return listAllAppointmentsD
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
+export const listAppointmentsDoctor = async(
+  doctorId: number
+) => {
+  try {
+    const listAllAppointmentsD = await appointment.findAll({where: {doctorId:doctorId}});
+    return listAllAppointmentsD
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
 export const deleteAppointments = async(

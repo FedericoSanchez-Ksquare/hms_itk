@@ -14,16 +14,12 @@ export const createUser = async (firstName: string, lastName: string, password: 
 };
 
 export const readUsers = async(
-  id: number
+  uid: string
 ) => {
   try {
-    if(id){
-      const readUser = await user.findByPk(id);
-      return readUser
-    }else{
-      const readUser = await user.findAll();
-      return readUser
-    }
+    const readUser = await user.findAll();
+    return readUser
+
   } catch (error) {
     console.log(error)
   }

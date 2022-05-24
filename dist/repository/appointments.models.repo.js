@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatesTime = exports.deleteAppointments = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
+exports.updatesTime = exports.deleteAppointments = exports.listAppointmentsDoctor = exports.readAppointmentsDoctor = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
 const appointment_1 = require("../models/appointment");
 const createAppointments = (appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -40,14 +40,10 @@ const readAppointments = (id) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.readAppointments = readAppointments;
-const readAppointmentsPatient = (userId, patientId, doctorId) => __awaiter(void 0, void 0, void 0, function* () {
+const readAppointmentsPatient = (userId, patientId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (patientId) {
             const readOneAppointmentP = yield appointment_1.appointment.findOne({ where: { patientId: patientId } });
-            return readOneAppointmentP;
-        }
-        if (doctorId) {
-            const readOneAppointmentP = yield appointment_1.appointment.findOne({ where: { doctorId: doctorId } });
             return readOneAppointmentP;
         }
     }
@@ -56,14 +52,10 @@ const readAppointmentsPatient = (userId, patientId, doctorId) => __awaiter(void 
     }
 });
 exports.readAppointmentsPatient = readAppointmentsPatient;
-const listAppointmentsPatient = (patientId, doctorId) => __awaiter(void 0, void 0, void 0, function* () {
+const listAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (patientId) {
             const readAllAppointmentsP = yield appointment_1.appointment.findAll({ where: { patientId: patientId } });
-            return readAllAppointmentsP;
-        }
-        if (doctorId) {
-            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ where: { doctorId: doctorId } });
             return readAllAppointmentsP;
         }
     }
@@ -73,26 +65,26 @@ const listAppointmentsPatient = (patientId, doctorId) => __awaiter(void 0, void 
 });
 exports.listAppointmentsPatient = listAppointmentsPatient;
 //mas brujeria
-// export const readAppointmentsDoctor = async(
-//   doctorId: number
-// ) => {
-//   try {
-//     const readOneAppointmentD = await appointment.findOne({where: {doctorId:doctorId}});
-//     return readOneAppointmentD
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
-// export const listAppointmentsDoctor = async(
-//   doctorId: number
-// ) => {
-//   try {
-//     const listAllAppointmentsD = await appointment.findAll({where: {doctorId:doctorId}});
-//     return listAllAppointmentsD
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
+const readAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const readOneAppointmentD = yield appointment_1.appointment.findOne({ where: { doctorId: doctorId } });
+        return readOneAppointmentD;
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.readAppointmentsDoctor = readAppointmentsDoctor;
+const listAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const listAllAppointmentsD = yield appointment_1.appointment.findAll({ where: { doctorId: doctorId } });
+        return listAllAppointmentsD;
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.listAppointmentsDoctor = listAppointmentsDoctor;
 const deleteAppointments = (id, is_deleted) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deleteAppointment = yield appointment_1.appointment.update({ is_deleted: is_deleted }, { where: { id } });

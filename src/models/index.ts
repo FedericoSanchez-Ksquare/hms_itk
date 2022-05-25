@@ -1,13 +1,12 @@
 import { Sequelize } from 'sequelize'
 import { initUserModel } from './user'
-import { initRoleModel } from './roles'
 import { initPatientModel } from './patient'
 import { initDoctorModel } from './doctor'
 import { initAppointmentsModel } from './appointment'
 
 export let sequelize: Sequelize
 
-const models =[initRoleModel, initUserModel, initPatientModel,initDoctorModel, initAppointmentsModel]
+const models =[initUserModel, initPatientModel,initDoctorModel, initAppointmentsModel]
 
 export const startSequelize = (
   db_name: string,

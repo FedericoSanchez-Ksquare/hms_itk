@@ -1,9 +1,14 @@
 import { Router, Request, Response } from "express";
 import { createPatient,readPatients } from "../repository/patients.models.repo";
+import { hasRole } from "../middlewares/hasRoles";
+import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const PatientRouter = Router();
 
-PatientRouter.post("/createPatient", async (req: Request, res: Response) => {
+PatientRouter.post("/createPatient",
+  isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: true }),
+   async (req: Request, res: Response) => {
   const { birth, weigth, height, gender, address, userId } = req.body;
   const newPatientId = await createPatient(birth, weigth, height, gender, address,userId );
 
@@ -13,7 +18,9 @@ PatientRouter.post("/createPatient", async (req: Request, res: Response) => {
   });
 });
 
-PatientRouter.get("/showPatient", async (req: Request, res: Response) => {
+PatientRouter.get("/showPatient",
+  isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: true }), async (req: Request, res: Response) => {
   const readPatient = await readPatients(req.body.id)
   res.statusCode = 201;
   res.json({

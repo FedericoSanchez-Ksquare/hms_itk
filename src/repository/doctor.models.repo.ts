@@ -1,5 +1,4 @@
 import { doctor } from "../models/doctor";
-import { roles } from "../models/roles";
 
 export const createDoctor = async (medicalSpeciality: string, userId: string ) => {
   try {

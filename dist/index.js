@@ -42,7 +42,6 @@ const users_routes_1 = require("./routes/users.routes");
 const appointments_routes_1 = require("./routes/appointments.routes");
 const doctors_routes_1 = require("./routes/doctors.routes");
 const patients_routes_1 = require("./routes/patients.routes");
-const roles_routes_1 = require("./routes/roles.routes");
 const admin = __importStar(require("firebase-admin"));
 dotenv_1.default.config();
 admin.initializeApp();
@@ -58,7 +57,6 @@ app.use(express_1.default.json());
 // Routes //
 app.use("/users", users_routes_1.UserRouter);
 app.use("/patient", patients_routes_1.PatientRouter);
-app.use("/roles", roles_routes_1.RolesRouter);
 app.use("/doctor", doctors_routes_1.DoctorRouter);
 app.use("/appointment", appointments_routes_1.AppointmentRouter);
 app.get("/", (req, res) => {

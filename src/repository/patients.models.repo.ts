@@ -1,6 +1,6 @@
 import { where } from "sequelize/types";
 import { patient } from "../models/patient";
-import { roles } from "../models/roles";
+
 
 export const createPatient = async (birth: string, weigth: number, height: number, gender: string, address:string, userId: string ) => {
   try {

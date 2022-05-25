@@ -14,7 +14,10 @@ import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const AppointmentRouter = Router();
 
-AppointmentRouter.post("/create", async (req: Request, res: Response) => {
+AppointmentRouter.post("/create",
+  isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: true }), 
+  async (req: Request, res: Response) => {
   const { appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId } = req.body;
   const newAppointmentId = await createAppointments(appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId);
 
@@ -24,7 +27,10 @@ AppointmentRouter.post("/create", async (req: Request, res: Response) => {
   });
 });
 
-AppointmentRouter.get("/read", async (req: Request, res: Response) => {
+AppointmentRouter.get("/read",
+  isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: true }),
+  async (req: Request, res: Response) => {
   const readAppointment = await readAppointments(req.body.id)
   res.statusCode = 201;
   res.json({
@@ -32,29 +38,28 @@ AppointmentRouter.get("/read", async (req: Request, res: Response) => {
   });
 });
 
-AppointmentRouter.get("/findAppointment",
+AppointmentRouter.get("/findAppointment/:patientId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser:true}), 
    async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const { patientId , doctorId } = req.body;
-  
-  const readAppointment = await readAppointmentsPatient(userId,patientId)
+  const { patientId } = req.params;
+  const readAppointment = await readAppointmentsPatient(+patientId)
   res.statusCode = 201;
   res.json({
     desc: readAppointment,
   });
 });
 
-AppointmentRouter.get("/readListPatient",
+AppointmentRouter.get("/readListPatient/:patientId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
-   allowSameUser:true}), async (req: Request, res: Response) => {
-  const { patientId  } = req.body;
-  const listAppointment = await listAppointmentsPatient(patientId)
+   allowSameUser:true}), 
+  async (req: Request, res: Response) => {
+  const { patientId  } = req.params;
+  const listAppointment = await listAppointmentsPatient(+patientId)
   res.statusCode = 201;
   res.json({
     desc: listAppointment,
@@ -64,33 +69,37 @@ hasRole(
 //No se que hice aqui pero esta embrujado y siempre busca al fantasma de
 // patientid y le vale el doctorid
 
-AppointmentRouter.get("/readDoctor",
+AppointmentRouter.get("/readDoctor/:doctorId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
-   allowSameUser:true}), async (req: Request, res: Response) => {
-  const { doctorId } = req.body;
-  const readAppointmentDoctors = await readAppointmentsDoctor(doctorId)
+  allowSameUser: true}), 
+  async (req: Request, res: Response) => {
+  const { doctorId } = req.params;
+  const readAppointmentDoctors = await readAppointmentsDoctor(+doctorId)
   res.statusCode = 201;
   res.json({
     desc: readAppointmentDoctors,
   });
 });
 
-AppointmentRouter.get("/listDoctor",
+AppointmentRouter.get("/listDoctor/:doctorId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser:true}),  async (req: Request, res: Response) => {
-  const { doctorId } = req.body;
-  const listAppointmentsDoctors = await listAppointmentsDoctor(doctorId)
+  const { doctorId } = req.params;
+  const listAppointmentsDoctors = await listAppointmentsDoctor(+doctorId)
   res.statusCode = 201;
   res.json({
     appointmentDoctor: listAppointmentsDoctors,
   });
 });
 
-AppointmentRouter.patch("/updateTime", async (req: Request, res: Response) => {
+AppointmentRouter.patch("/updateTime",
+isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: true }),
+  async (req: Request, res: Response) => {
   const {id,appointmentDate, appointmentTime} = req.body;
   const updatedTime = await updatesTime(id, appointmentDate, appointmentTime);
 

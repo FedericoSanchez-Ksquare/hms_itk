@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initUserModel = exports.user = void 0;
 const sequelize_1 = require("sequelize");
-const roles_1 = require("./roles");
 class user extends sequelize_1.Model {
 }
 exports.user = user;
@@ -38,6 +37,5 @@ const initUserModel = (sequelize) => {
         sequelize: sequelize
     });
     //user.hasOne(roles, { foreignKey: 'roleid' })
-    user.belongsTo(roles_1.roles);
 };
 exports.initUserModel = initUserModel;

@@ -1,5 +1,5 @@
 import { user } from "../models/user";
-import { roles } from "../models/roles";
+
 
 export const createUser = async (firstName: string, lastName: string, password: string, email: string,is_active:boolean, roleId: number ) => {
   try {

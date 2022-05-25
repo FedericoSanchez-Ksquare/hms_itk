@@ -1,5 +1,4 @@
 import * as admin from "firebase-admin"
-import  { roles }  from '../models/roles'
 import { Role } from "../types";
 
 export const createUserFB = async(

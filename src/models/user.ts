@@ -1,6 +1,5 @@
 import {Model,InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, Sequelize} from 'sequelize'
 import { sequelize }  from '.'
-import { roles } from './roles';
 
 export class user extends Model <InferAttributes<user>,
 InferCreationAttributes<user>
@@ -49,5 +48,4 @@ export const initUserModel = (sequelize: Sequelize) =>{
     })
     
     //user.hasOne(roles, { foreignKey: 'roleid' })
-    user.belongsTo(roles)
 }

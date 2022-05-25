@@ -40,7 +40,7 @@ const readAppointments = (id) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.readAppointments = readAppointments;
-const readAppointmentsPatient = (userId, patientId) => __awaiter(void 0, void 0, void 0, function* () {
+const readAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (patientId) {
             const readOneAppointmentP = yield appointment_1.appointment.findOne({ where: { patientId: patientId } });

@@ -28,7 +28,6 @@ export const readAppointments = async(
   }
 }
 export const readAppointmentsPatient = async(
-  userId: string,
   patientId: number,
 ) => {
   try {

@@ -6,7 +6,8 @@ import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const DoctorRouter = Router();
 
-DoctorRouter.post("/createDoctor",isAuthenticated,
+DoctorRouter.post("/createDoctor",
+isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser:true}),  async (req: Request, res: Response) => {

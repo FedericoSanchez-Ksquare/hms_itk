@@ -1,5 +1,7 @@
 # hms_itk
 
+the requests are located inside of this repository, the file name is routes_insomnia.json
+
 # Running the project
 # Dependencies
 

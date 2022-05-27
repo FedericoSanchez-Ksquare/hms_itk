@@ -16,29 +16,25 @@ const hasRoles_1 = require("../middlewares/hasRoles");
 const isAuthenticated_1 = require("../middlewares/isAuthenticated");
 exports.DoctorRouter = (0, express_1.Router)();
 exports.DoctorRouter.post("/createDoctor", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
-    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { medicalSpeciality, userId } = req.body;
-    const newDoctorId = yield (0, doctor_models_repo_1.createDoctor)(medicalSpeciality, userId);
-    res.statusCode = 201;
-    res.send({
-        id: newDoctorId,
-    });
+    try {
+        const newDoctorId = yield (0, doctor_models_repo_1.createDoctor)(medicalSpeciality, userId);
+        res.statusCode = 201;
+        res.send({
+            id: newDoctorId,
+            messages: "User doctor created with ID= " + newDoctorId
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
 }));
-// DoctorRouter.get("/showDoctor", 
-// isAuthenticated,
-// hasRole(
-//   {roles: ["admin"],
-//    allowSameUser:false}), async (req: Request, res: Response) => {
-//   const readDoctor = await readDoctors(req.body.id)
-//   res.statusCode = 201;
-//   res.json({
-//     doctors: readDoctor,
-//   });
-// });
 exports.DoctorRouter.get("/showDoctor", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const readDoctor = yield (0, doctor_models_repo_1.readDoctors)(req.body.id);
     res.statusCode = 201;
     res.json({
-        doctors: readDoctor,
+        id: readDoctor,
+        messages: "Registered doctors:"
     });
 }));

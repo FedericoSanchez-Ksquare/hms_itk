@@ -7,7 +7,8 @@ import {
   readAppointmentsPatient,
   listAppointmentsPatient,
   readAppointmentsDoctor,
-  listAppointmentsDoctor
+  listAppointmentsDoctor,
+  listAllAppointments
 } from "../repository/appointments.models.repo";
 import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
@@ -19,102 +20,170 @@ AppointmentRouter.post("/create",
   hasRole({ roles: ["admin"], allowSameUser: true }), 
   async (req: Request, res: Response) => {
   const { appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId } = req.body;
-  const newAppointmentId = await createAppointments(appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId);
-
-  res.statusCode = 201;
-  res.send({
-    id: newAppointmentId,
-  });
+  try {
+    const newAppointmentId = await createAppointments(appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId);
+    res.statusCode = 201;
+    res.send({
+      id: newAppointmentId,
+      message: "Appointment created with ID= " + newAppointmentId
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
 });
 
-AppointmentRouter.get("/read",
-  isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: true }),
-  async (req: Request, res: Response) => {
-  const readAppointment = await readAppointments(req.body.id)
-  res.statusCode = 201;
-  res.json({
-    appointment: readAppointment,
-  });
-});
 
-AppointmentRouter.get("/findAppointment/:patientId",
+
+AppointmentRouter.get("/findAppointmentsPatient/:patientId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser:true}), 
    async (req: Request, res: Response) => {
   const { patientId } = req.params;
-  const readAppointment = await readAppointmentsPatient(+patientId)
-  res.statusCode = 201;
-  res.json({
-    desc: readAppointment,
-  });
+  try {
+    const readAppointment = await readAppointmentsPatient(+patientId)
+    res.statusCode = 201;
+    res.json({
+    id: readAppointment,
+    message: "Appointments for patient with ID= " + patientId
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
 });
 
-AppointmentRouter.get("/readListPatient/:patientId",
+AppointmentRouter.get("/listAppointmentsPatient/:patientId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser:true}), 
   async (req: Request, res: Response) => {
-  const { patientId  } = req.params;
-  const listAppointment = await listAppointmentsPatient(+patientId)
-  res.statusCode = 201;
-  res.json({
-    desc: listAppointment,
-  });
+  const { patientId } = req.params;
+  const {limit, offset} = req.query
+  try {
+    const listAppointment = await listAppointmentsPatient(+patientId, limit ? +limit : 10, offset ? +offset : 0)
+    res.statusCode = 201;
+    res.json({
+      id: listAppointment,
+      message: "Appointments for patient with ID=" + patientId
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
 });
 
-//No se que hice aqui pero esta embrujado y siempre busca al fantasma de
-// patientid y le vale el doctorid
-
-AppointmentRouter.get("/readDoctor/:doctorId",
+AppointmentRouter.get("/findAppointmentsDoctor/:doctorId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
   allowSameUser: true}), 
   async (req: Request, res: Response) => {
   const { doctorId } = req.params;
-  const readAppointmentDoctors = await readAppointmentsDoctor(+doctorId)
-  res.statusCode = 201;
-  res.json({
-    desc: readAppointmentDoctors,
-  });
+  try {
+    const readAppointmentDoctors = await readAppointmentsDoctor(+doctorId)
+    res.statusCode = 201;
+    res.json({
+      id: readAppointmentDoctors,
+      message: "Appointments for doctor with ID= "+ doctorId
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
 });
 
-AppointmentRouter.get("/listDoctor/:doctorId",
+AppointmentRouter.get("/listAppointmentsDoctor/:doctorId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser:true}),  async (req: Request, res: Response) => {
   const { doctorId } = req.params;
-  const listAppointmentsDoctors = await listAppointmentsDoctor(+doctorId)
-  res.statusCode = 201;
-  res.json({
-    appointmentDoctor: listAppointmentsDoctors,
-  });
+  const {filter, value, order} = req.query
+  try {
+    const listAppointmentsDoctors = await listAppointmentsDoctor(+doctorId, filter ? filter : "id", value ? value :"", order ? order: "ASC" )
+    res.statusCode = 201;
+    res.json({
+      id: listAppointmentsDoctors,
+      message: "Appointments for doctor with ID= " +doctorId
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
+});
+AppointmentRouter.get("/allAppointments",
+  isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: false }),
+  async (req: Request, res: Response) => {
+    const {id,filter, value, order,limit, offset} = req.query
+    try {
+      const readAppointment = 
+      await listAllAppointments(id? +id: 0,filter ? filter : "id",  value ? value :"false", order ? order: "ASC", limit ? +limit : 10, offset ? +offset : 0 )
+      res.statusCode = 200;
+      res.json({
+        id: readAppointment,
+        message: "Show all appointments"
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ error: "something went wrong" });
+    }
 });
 
-AppointmentRouter.patch("/updateTime",
+AppointmentRouter.patch("/updateAppointmentTime",
 isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
   async (req: Request, res: Response) => {
   const {id,appointmentDate, appointmentTime} = req.body;
-  const updatedTime = await updatesTime(id, appointmentDate, appointmentTime);
-
-  res.statusCode = 201;
-  res.send({
-    id: updatedTime,
-  });
+  try {
+    const updatedTime = await updatesTime(id, appointmentDate, appointmentTime);
+    res.statusCode = 201;
+    res.send({
+      id: updatedTime,
+      message: "Time on appointment updated"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
 });
 
-AppointmentRouter.patch("/delete", async (req: Request, res: Response)=>{
+AppointmentRouter.patch("/disableAppointment", 
+isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: true }),
+async (req: Request, res: Response)=>{
   const {id, is_deleted} = req.body;
-  const deleted = await deleteAppointments(id, is_deleted)
+  try {
+    const deleted = await deleteAppointments(id, true)
     res.statusCode = 201;
-  res.send({
-    id: deleted,
+    res.send({
+      id: deleted,
+      message: "Appointment disbled with ID= " + deleted
   });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
+});
+AppointmentRouter.patch("/enableAppointment",
+isAuthenticated,
+  hasRole({ roles: ["admin"], allowSameUser: true }),
+async (req: Request, res: Response)=>{
+  const {id, is_deleted} = req.body;
+  try {
+    const deleted = await deleteAppointments(id, false)
+    res.statusCode = 201;
+    res.send({
+      id: deleted,
+      message: "Appointment enabled with ID= " + deleted
+  });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "something went wrong" });
+  }
 });
 

@@ -1,3 +1,4 @@
+import { sequelize } from "../models";
 import { appointment } from "../models/appointment";
 
 export const createAppointments = async (appointmentDate: string, appointmentDetails: string,appointmentTime:string, is_deleted:boolean, patientId:number, doctorId:number  ) => {
@@ -13,16 +14,12 @@ export const createAppointments = async (appointmentDate: string, appointmentDet
 };
 
 export const readAppointments = async(
-  id: number,
+  limit?: number,
+  offset?: number
 ) => {
   try {
-    if(id){
-      const readAppointment = await appointment.findByPk(id);
-      return readAppointment
-    }else{
-      const readAppointment = await appointment.findAll();
-      return readAppointment
-    }
+    const readAppointment = await appointment.findAll({limit: limit, offset:offset});
+    return readAppointment
   } catch (error) {
     console.log(error)
   }
@@ -42,10 +39,12 @@ export const readAppointmentsPatient = async(
 
 export const listAppointmentsPatient = async(
   patientId: number,
+  limit?: number,
+  offset?: number
 ) => {
   try {
     if (patientId) {
-      const readAllAppointmentsP = await appointment.findAll({where: {patientId:patientId}});
+      const readAllAppointmentsP = await appointment.findAll({where: {patientId:patientId}, limit: limit, offset:offset});
       return readAllAppointmentsP
     }
   
@@ -53,8 +52,6 @@ export const listAppointmentsPatient = async(
     console.log(error)
   }
 }
-
-//mas brujeria
 
 export const readAppointmentsDoctor = async(
   doctorId: number
@@ -68,10 +65,91 @@ export const readAppointmentsDoctor = async(
 }
 
 export const listAppointmentsDoctor = async(
-  doctorId: number
+  id: number,
+  filter?: any,
+  value?: any,
+  order?: any,
+  
 ) => {
   try {
-    const listAllAppointmentsD = await appointment.findAll({where: {doctorId:doctorId}});
+    let listAllAppointmentsD
+    switch (filter) {
+      case "patientId":
+        if (value === "patientId" || value === "doctorId" ) {
+          listAllAppointmentsD = await appointment.findAll({order: [[value, order ]],where: {doctorId:id}});
+        }else{
+          listAllAppointmentsD = await appointment.findAll({order: [['id', order ]],where: {doctorId:id, patientId:value}});
+        }
+        break;
+      case "doctorId":
+        if (value === "doctorId" || value === "patientId" ) {
+         listAllAppointmentsD = await appointment.findAll({order: [[value, order]],where: {doctorId:id}}); 
+        }
+        else{
+          listAllAppointmentsD = await appointment.findAll({order: [['id', order]],where: {doctorId:id}}); 
+        }
+        break;
+      case "appointmentDate":
+        listAllAppointmentsD = await appointment.findAll({order: [['id', order]],where: {doctorId:id,appointmentDate:value}});  
+        break;
+      case "appointmentTime":
+        listAllAppointmentsD = await appointment.findAll({order: [['id', order ]],where: {doctorId:id,appointmentTime:value}});   
+        break;
+      case "is_deleted":
+        listAllAppointmentsD = await appointment.findAll({order: [['id', order ]],where: {doctorId:id, is_deleted:value}});
+        
+        break;
+      default:
+        listAllAppointmentsD = await appointment.findAll({where: {doctorId:id}});
+        break;
+    }
+    return listAllAppointmentsD
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const listAllAppointments = async(
+  id: number,
+  filter?: any,
+  value?: any,
+  order?: any,
+  limit?: number,
+  offset?: number
+) => {
+  try {
+    let listAllAppointmentsD
+    switch (filter) {
+      case "patientId":
+        if(id>0)
+        {
+          listAllAppointmentsD = await appointment.findAll({order: [['id', order ]],where: {patientId:id},limit: limit, offset:offset});
+        }
+        else{
+          listAllAppointmentsD = await appointment.findAll({order: [['patientId', order ]],limit: limit, offset:offset});
+        }
+        break;
+      case "doctorId":
+        if(id>0){
+          listAllAppointmentsD = await appointment.findAll({order: [['id', order]],where: {doctorId:id},limit: limit, offset:offset}); 
+        }else{
+          listAllAppointmentsD = await appointment.findAll({order: [['doctorId', order]],limit: limit, offset:offset}); 
+        }
+        break;
+      case "is_deleted":
+        if(value ==="false")
+        {
+          listAllAppointmentsD = await appointment.findAll({order: [[filter, order ]],where: {is_deleted:"false"},limit: limit, offset:offset});
+        }
+        if(value=== "true")
+        {
+          listAllAppointmentsD = await appointment.findAll({order: [[filter, order ]],where: {is_deleted:"true"},limit: limit, offset:offset});
+        }
+        break;
+      default:
+        listAllAppointmentsD = await appointment.findAll({order: [[filter, order ]],limit: limit, offset:offset});
+        break;
+    }
     return listAllAppointmentsD
   } catch (error) {
     console.log(error)

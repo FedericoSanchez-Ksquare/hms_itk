@@ -10,32 +10,26 @@ DoctorRouter.post("/createDoctor",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
-   allowSameUser:true}),  async (req: Request, res: Response) => {
+   allowSameUser: false}), 
+   async (req: Request, res: Response) => {
   const { medicalSpeciality, userId } = req.body;
-  const newDoctorId = await createDoctor(medicalSpeciality, userId);
-
-  res.statusCode = 201;
-  res.send({
-    id: newDoctorId,
-  });
+  try {
+    const newDoctorId = await createDoctor(medicalSpeciality, userId);
+    res.statusCode = 201;
+    res.send({
+      id: newDoctorId,
+      messages: "User doctor created with ID= " + newDoctorId
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
-
-// DoctorRouter.get("/showDoctor", 
-// isAuthenticated,
-// hasRole(
-//   {roles: ["admin"],
-//    allowSameUser:false}), async (req: Request, res: Response) => {
-//   const readDoctor = await readDoctors(req.body.id)
-//   res.statusCode = 201;
-//   res.json({
-//     doctors: readDoctor,
-//   });
-// });
 
 DoctorRouter.get("/showDoctor", async (req: Request, res: Response) => {
   const readDoctor = await readDoctors(req.body.id)
   res.statusCode = 201;
   res.json({
-    doctors: readDoctor,
+    id: readDoctor,
+    messages: "Registered doctors:"
   });
 });

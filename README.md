@@ -1,5 +1,30 @@
 # hms_itk
 
+# Running the project
+# Dependencies
+
+We start by installing the dependencies with:
+npm install
+npm install -D
+
+# Local Database
+We create a database with Posgresql, this database will be used to store some data,
+we will use a .env file with the following variables:
+
+DB_NAME
+DB_USERNAME
+DB_PASSWORD
+DB_HOSTNAME
+PORT
+SUPER_USER
+GOOGLE_APPLICATION_CREDENTIALS
+
+# Everything is setup, now run trhe project
+you can run the project by using the command:
+
+npm run dev
+
+
 # MODELS
 
 ### User Models
@@ -18,15 +43,12 @@ interface User {
 }
 ```
 
-### Role Models
+### Role Types
 
-With this Role Model we will asign an specific role any user created being either a patient, a doctor or an admin
+replaced a proper table of roles with just a types declaration for each of the roles
 
 ```ts
-interface Role {
-  roleId: int;
-  role: string; //varchar(100)
-}
+export type Role = "admin" | "patient" | "doctor" | "";
 ```
 
 ### Patient Models

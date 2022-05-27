@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatesTime = exports.deleteAppointments = exports.listAppointmentsDoctor = exports.readAppointmentsDoctor = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
+exports.updatesTime = exports.deleteAppointments = exports.listAllAppointments = exports.listAppointmentsDoctor = exports.readAppointmentsDoctor = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
 const appointment_1 = require("../models/appointment");
 const createAppointments = (appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -24,16 +24,10 @@ const createAppointments = (appointmentDate, appointmentDetails, appointmentTime
     }
 });
 exports.createAppointments = createAppointments;
-const readAppointments = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const readAppointments = (limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (id) {
-            const readAppointment = yield appointment_1.appointment.findByPk(id);
-            return readAppointment;
-        }
-        else {
-            const readAppointment = yield appointment_1.appointment.findAll();
-            return readAppointment;
-        }
+        const readAppointment = yield appointment_1.appointment.findAll({ limit: limit, offset: offset });
+        return readAppointment;
     }
     catch (error) {
         console.log(error);
@@ -52,10 +46,10 @@ const readAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.readAppointmentsPatient = readAppointmentsPatient;
-const listAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0, function* () {
+const listAppointmentsPatient = (patientId, limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (patientId) {
-            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ where: { patientId: patientId } });
+            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ where: { patientId: patientId }, limit: limit, offset: offset });
             return readAllAppointmentsP;
         }
     }
@@ -64,7 +58,6 @@ const listAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.listAppointmentsPatient = listAppointmentsPatient;
-//mas brujeria
 const readAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const readOneAppointmentD = yield appointment_1.appointment.findOne({ where: { doctorId: doctorId } });
@@ -75,9 +68,39 @@ const readAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.readAppointmentsDoctor = readAppointmentsDoctor;
-const listAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, function* () {
+const listAppointmentsDoctor = (id, filter, value, order) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const listAllAppointmentsD = yield appointment_1.appointment.findAll({ where: { doctorId: doctorId } });
+        let listAllAppointmentsD;
+        switch (filter) {
+            case "patientId":
+                if (value === "patientId" || value === "doctorId") {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[value, order]], where: { doctorId: id } });
+                }
+                else {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, patientId: value } });
+                }
+                break;
+            case "doctorId":
+                if (value === "doctorId" || value === "patientId") {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[value, order]], where: { doctorId: id } });
+                }
+                else {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id } });
+                }
+                break;
+            case "appointmentDate":
+                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, appointmentDate: value } });
+                break;
+            case "appointmentTime":
+                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, appointmentTime: value } });
+                break;
+            case "is_deleted":
+                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, is_deleted: value } });
+                break;
+            default:
+                listAllAppointmentsD = yield appointment_1.appointment.findAll({ where: { doctorId: id } });
+                break;
+        }
         return listAllAppointmentsD;
     }
     catch (error) {
@@ -85,6 +108,45 @@ const listAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.listAppointmentsDoctor = listAppointmentsDoctor;
+const listAllAppointments = (id, filter, value, order, limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let listAllAppointmentsD;
+        switch (filter) {
+            case "patientId":
+                if (id > 0) {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { patientId: id }, limit: limit, offset: offset });
+                }
+                else {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['patientId', order]], limit: limit, offset: offset });
+                }
+                break;
+            case "doctorId":
+                if (id > 0) {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id }, limit: limit, offset: offset });
+                }
+                else {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['doctorId', order]], limit: limit, offset: offset });
+                }
+                break;
+            case "is_deleted":
+                if (value === "false") {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[filter, order]], where: { is_deleted: "false" }, limit: limit, offset: offset });
+                }
+                if (value === "true") {
+                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[filter, order]], where: { is_deleted: "true" }, limit: limit, offset: offset });
+                }
+                break;
+            default:
+                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[filter, order]], limit: limit, offset: offset });
+                break;
+        }
+        return listAllAppointmentsD;
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.listAllAppointments = listAllAppointments;
 const deleteAppointments = (id, is_deleted) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deleteAppointment = yield appointment_1.appointment.update({ is_deleted: is_deleted }, { where: { id } });

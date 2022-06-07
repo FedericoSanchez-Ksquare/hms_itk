@@ -1,6 +1,6 @@
 import {Model,InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, Sequelize} from 'sequelize'
 import { doctor } from './doctor';
-import { initPatientModel, patient } from './patient';
+import { patient } from './patient';
 
 export class appointment extends Model <InferAttributes<appointment>,InferCreationAttributes<appointment>>{
     declare id: CreationOptional<number>;

@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import { 
-  createAppointments, 
-  readAppointments, 
+  createAppointments,
   updatesTime, 
   deleteAppointments, 
   readAppointmentsPatient,

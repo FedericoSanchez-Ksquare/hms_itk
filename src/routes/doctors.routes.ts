@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { createDoctor,readDoctors } from "../repository/doctor.models.repo";
-import {createUserFB, disableUserFB} from "../firebase/methods";
 import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 

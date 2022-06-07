@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Role } from "../types";
-// isAuthorized
 
 export const hasRole = (options: { roles: Role[]; allowSameUser: boolean }) => {
   return (req: Request, res: Response, next: Function) => {

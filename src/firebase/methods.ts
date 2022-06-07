@@ -16,8 +16,6 @@ export const createUserFB = async(
 
   await admin.auth().setCustomUserClaims(uid, { role, isDisabled });
 
-  // Guardar a Postgresql -> Como van a manejar si esto falla?
-
   return uid;
 }
 const mapToUser = (user: admin.auth.UserRecord) => {

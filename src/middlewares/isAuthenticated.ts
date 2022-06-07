@@ -23,7 +23,7 @@ export const isAuthenticated = async (
       error: "No auth",
     });
   }
-  // "Bearer here's.my.JWToken"
+
   const splittedToken = authorization.split("Bearer ");
   if (splittedToken.length !== 2) {
     res.statusCode = 401;

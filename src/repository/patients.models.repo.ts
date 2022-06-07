@@ -1,4 +1,3 @@
-import { where } from "sequelize/types";
 import { patient } from "../models/patient";
 
 

@@ -1,6 +1,5 @@
 import { user } from "../models/user";
 
-
 export const createUser = async (firstName: string, lastName: string, password: string, email: string,is_active:boolean, roleId: number ) => {
   try {
     const newUser = await user.create({

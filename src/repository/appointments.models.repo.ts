@@ -1,4 +1,3 @@
-import { sequelize } from "../models";
 import { appointment } from "../models/appointment";
 
 export const createAppointments = async (appointmentDate: string, appointmentDetails: string,appointmentTime:string, is_deleted:boolean, patientId:number, doctorId:number  ) => {

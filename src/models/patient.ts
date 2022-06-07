@@ -1,6 +1,4 @@
 import {Model,InferAttributes, InferCreationAttributes, CreationOptional, DataTypes, Sequelize} from 'sequelize'
-import { sequelize }  from '.'
-import { user } from './user';
 
 export class patient extends Model <InferAttributes<patient>,InferCreationAttributes<patient>>{
     declare id: CreationOptional<number>;

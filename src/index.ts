@@ -10,8 +10,6 @@ import * as admin from "firebase-admin"
 dotenv.config();
 admin.initializeApp();
 
-//inicar sequelize primero y luego la api
-
 const app = express();
 
 const port = process.env.PORT;
@@ -20,11 +18,9 @@ const db_username = <string>process.env.DB_USERNAME;
 const db_password = <string>process.env.DB_PASSWORD;
 const db_host = <string>process.env.DB_HOSTNAME;
 
-// Middlewares //
 
 app.use(express.json());
 
-// Routes //
 app.use("/users", UserRouter);
 app.use("/patient", PatientRouter);
 app.use("/doctor", DoctorRouter);

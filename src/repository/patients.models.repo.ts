@@ -5,7 +5,7 @@ import { patient } from "../models/patient";
 export const createPatient = async (birth: string, weigth: number, height: number, gender: string, address:string, userId: string ) => {
   try {
     const newPatient = await patient.create({
-      birth, weigth, height, gender, address, userId// esto es UID DE FIREBASE
+      birth, weigth, height, gender, address, userId
     });
     console.log("Patient created with id= "+newPatient.id);
     return newPatient.id;

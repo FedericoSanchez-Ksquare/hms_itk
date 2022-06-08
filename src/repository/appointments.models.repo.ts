@@ -17,6 +17,7 @@ export const readAppointments = async(
   offset?: number
 ) => {
   try {
+    // Remember that since ES6, you can only use { limit, offset }
     const readAppointment = await appointment.findAll({limit: limit, offset:offset});
     return readAppointment
   } catch (error) {
@@ -27,7 +28,10 @@ export const readAppointmentsPatient = async(
   patientId: number,
 ) => {
   try {
+    // is it possible to not receive at this point a patientId? if no, why do you have this conditional.
+    // If it's possible, then why don't you have the else statement or the code to handle that scenario
     if(patientId){
+      // Remember that since ES6, you can only use { patientId }
     const readOneAppointmentP = await appointment.findOne({where: {patientId:patientId}});
     return readOneAppointmentP 
     }
@@ -42,7 +46,10 @@ export const listAppointmentsPatient = async(
   offset?: number
 ) => {
   try {
+    // is it possible to not receive at this point a patientId? if no, why do you have this conditional.
+    // If it's possible, then why don't you have the else statement or the code to handle that scenario
     if (patientId) {
+      // Remember that since ES6, you can only use {patientId}, limit, offset}
       const readAllAppointmentsP = await appointment.findAll({where: {patientId:patientId}, limit: limit, offset:offset});
       return readAllAppointmentsP
     }
@@ -56,13 +63,14 @@ export const readAppointmentsDoctor = async(
   doctorId: number
 ) => {
   try {
+    // Remember that since ES6, you can only use {doctorId}
     const readOneAppointmentD = await appointment.findOne({where: {doctorId:doctorId}});
     return readOneAppointmentD
   } catch (error) {
     console.log(error)
   }
 }
-
+// Please refactor this function to accept none, one, or more filters per request
 export const listAppointmentsDoctor = async(
   id: number,
   filter?: any,
@@ -107,7 +115,7 @@ export const listAppointmentsDoctor = async(
     console.log(error)
   }
 }
-
+// Please refactor this function to accept none, one, or more filters per request
 export const listAllAppointments = async(
   id: number,
   filter?: any,
@@ -160,6 +168,7 @@ export const deleteAppointments = async(
   id:number, is_deleted: boolean
 )=>{
   try {
+    // Remember that since ES6, you can only use {is_deleted}
     const deleteAppointment = await appointment.update({is_deleted: is_deleted},{where: {id}})
     return deleteAppointment
   } catch (error) {
@@ -172,6 +181,7 @@ export const updatesTime = async(
   id: number, appointmentTime: string, appointmentDate: string
 ) =>{
   try {
+    // Remember that since ES6, you can only use {appointmentTime, appointmentDate}
     const updateTime = await appointment.update({appointmentTime: appointmentTime, appointmentDate: appointmentDate }, {where:{id}})
     console.log("time updated"+id);
     return updateTime

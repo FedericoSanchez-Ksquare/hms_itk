@@ -15,6 +15,8 @@ export const readDoctors = async(
   id: number
 ) => {
   try {
+    // In the way you have your if statement, you don't need to type else statement,
+    // just put the code inside the "else" statment outside the if block.
     if(id){
       const readDoctor = await doctor.findByPk(id);
       return readDoctor

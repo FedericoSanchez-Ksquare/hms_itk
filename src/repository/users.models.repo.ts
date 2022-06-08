@@ -27,6 +27,7 @@ export const disableUsers = async(
   id: number, is_active: boolean
 ) =>{
   try {
+    // Remember that since ES6, you can only use {is_active}
     const disablePatient = await user.update({is_active: is_active}, {where:{id}})
     return disablePatient
   } catch (error) {

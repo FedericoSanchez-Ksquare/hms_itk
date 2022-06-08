@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { startSequelize } from "./models";
+// Please create an index.ts file inside routes to handle a single import statement,
+// your code will be cleaner and all your imports will be centralized
 import { UserRouter } from "./routes/users.routes";
 import { AppointmentRouter } from "./routes/appointments.routes";
 import { DoctorRouter} from "./routes/doctors.routes";
@@ -26,11 +28,14 @@ app.use("/patient", PatientRouter);
 app.use("/doctor", DoctorRouter);
 app.use("/appointment", AppointmentRouter);
 
-
+// Please remove this unused part of your code
 app.get("/", (req: Request, res: Response) => {
   res.send(req.originalUrl);
 });
 
+// As a recommendation, I would wrap the startSequelize function in a promise, and when everything is done,
+// inside the then statement, I would call the app.listen. We always want to init the server after all
+// initializations
 app.listen(port, async () => {
   try {
     startSequelize(db_name, db_password, db_host, db_username);

@@ -23,10 +23,10 @@ hasRole(
     console.log(error);
   }
 });
-
+// So any person, with any role, signed or not signed, will be able to access this endpoint, is it ok?
 DoctorRouter.get("/showDoctor", async (req: Request, res: Response) => {
   const readDoctor = await readDoctors(req.body.id)
-  res.statusCode = 201;
+  res.statusCode = 201; // Please change to 200
   res.json({
     id: readDoctor,
     messages: "Registered doctors:"

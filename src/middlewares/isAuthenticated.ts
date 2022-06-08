@@ -4,13 +4,14 @@ import * as admin from "firebase-admin";
 export const isAuthenticated = async (
   req: Request,
   res: Response,
-  next: Function
+  next: Function // There is an interface in express called NextFunction
 ) => {
   const { authorization } = req.headers;
 
   if (authorization === undefined) {
     
     res.statusCode = 401;
+    // Please create a single object for your 401 error and use it in every validation
     return res.send({
       error: "No auth",
     });

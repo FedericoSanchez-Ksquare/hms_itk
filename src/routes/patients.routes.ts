@@ -4,7 +4,7 @@ import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const PatientRouter = Router();
-
+// Why the admin is the only one that can create a patient?
 PatientRouter.post("/createPatient",
   isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
@@ -28,7 +28,7 @@ PatientRouter.get("/showPatient",
   async (req: Request, res: Response) => {
   try {
     const readPatient = await readPatients(req.body.id)
-    res.statusCode = 201;
+    res.statusCode = 201; // Please change to 200
     res.json({
       id: readPatient,
       message: "Registered patients:"

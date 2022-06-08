@@ -8,6 +8,8 @@ export let sequelize: Sequelize
 
 const models =[initUserModel, initPatientModel,initDoctorModel, initAppointmentsModel]
 
+// As a commented in the main file from your app (index.ts), you can wrap a promise into startSequelize
+// just to be sure that everything is going to happen after sequelize gets ready
 export const startSequelize = (
   db_name: string,
   db_password: string,
@@ -23,7 +25,7 @@ export const startSequelize = (
   for (const initModel of models) {
     initModel(sequelize);
   }
-  //sequelize.sync( {force: true});
+  //sequelize.sync( {force: true}); // Please remove comments from your code
   sequelize.sync();
 
 

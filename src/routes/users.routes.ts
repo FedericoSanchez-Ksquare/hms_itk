@@ -5,6 +5,9 @@ import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 
 export const UserRouter = Router();
+// Don't you think that we need to be authenticated to create a user?
+
+// This endpoint says "createUser", but then you have a validation for the role to be always patient.
 UserRouter.post("/createUser", async (req: Request, res: Response) => {
   const { displayName,email,password,role } = req.body;
   if (role !== "patient") {
@@ -82,18 +85,18 @@ UserRouter.delete("/:userId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
-   allowSameUser:true}),
+   allowSameUser:true}), // So, here I'm able to delete my own user? is it possible?
   async (req: Request, res: Response) => {
   const { userId } = req.params;
   const {isDisabled} = req.body;
-  if (isDisabled === undefined || isDisabled === null) {
+  if (isDisabled === undefined || isDisabled === null) { // You can use if(isDisabled == null)
       return res.status(400).send({
         error: "no fields to update",
       });
     }
   try {
     const disabledUserFB = await disableUserFB(userId, isDisabled );
-    res.statusCode = 201;
+    res.statusCode = 201; // Please change to 200
     res.send({
     id: disabledUserFB,
     message: "User updated"

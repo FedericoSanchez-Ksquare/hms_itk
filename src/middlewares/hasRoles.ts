@@ -3,7 +3,7 @@ import { Role } from "../types";
 
 export const hasRole = (options: { roles: Role[]; allowSameUser: boolean }) => {
   return (req: Request, res: Response, next: Function) => {
-    const { uid, email, role,patientId } = res.locals;
+    const { uid, email, role,patientId } = res.locals; // Remove unused variable
     const { userId } = req.params;
 
     if (email === process.env.SUPER_USER) {

@@ -41,7 +41,6 @@ const createUserFB = (displayName, email, password, role, isDisabled) => __await
         password,
     });
     yield admin.auth().setCustomUserClaims(uid, { role, isDisabled });
-    // Guardar a Postgresql -> Como van a manejar si esto falla?
     return uid;
 });
 exports.createUserFB = createUserFB;

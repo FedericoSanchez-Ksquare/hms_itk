@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.hasRole = void 0;
-// isAuthorized
 const hasRole = (options) => {
     return (req, res, next) => {
         const { uid, email, role, patientId } = res.locals;

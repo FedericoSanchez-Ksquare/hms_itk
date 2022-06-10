@@ -96,10 +96,7 @@ hasRole(
 });
 
 AppointmentRouter.get("/listAppointmentsDoctor/:doctorId",
-isAuthenticated,
-hasRole(
-  {roles: ["admin"],
-   allowSameUser:true}),  async (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
   const { doctorId } = req.params;
   const {filter, value, order} = req.query
   try {
@@ -137,9 +134,10 @@ AppointmentRouter.patch("/updateAppointmentTime",
 isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
   async (req: Request, res: Response) => {
-  const {id,appointmentDate, appointmentTime} = req.body;
+  const {id} =req.params;
+  const {appointmentDate, appointmentTime} = req.body;
   try {
-    const updatedTime = await updatesTime(id, appointmentDate, appointmentTime);
+    const updatedTime = await updatesTime(+id, appointmentDate, appointmentTime);
     res.statusCode = 201;
     res.send({
       id: updatedTime,
@@ -151,13 +149,13 @@ isAuthenticated,
   }
 });
 
-AppointmentRouter.patch("/disableAppointment", 
+AppointmentRouter.patch("/disableAppointment/:id", 
 isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
 async (req: Request, res: Response)=>{
-  const {id, is_deleted} = req.body;
+  const {id} =req.params
   try {
-    const deleted = await deleteAppointments(id, true)
+    const deleted = await deleteAppointments(+id, true)
     res.statusCode = 201;
     res.send({
       id: deleted,
@@ -168,13 +166,13 @@ async (req: Request, res: Response)=>{
     return res.status(500).send({ error: "something went wrong" });
   }
 });
-AppointmentRouter.patch("/enableAppointment",
+AppointmentRouter.patch("/enableAppointment/:id",
 isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
 async (req: Request, res: Response)=>{
-  const {id, is_deleted} = req.body;
+  const {id} = req.params;
   try {
-    const deleted = await deleteAppointments(id, false)
+    const deleted = await deleteAppointments(+id, false)
     res.statusCode = 201;
     res.send({
       id: deleted,

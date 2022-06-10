@@ -35,6 +35,5 @@ const initPatientModel = (sequelize) => {
         tableName: 'patients',
         sequelize: sequelize
     });
-    //patient.hasOne(user, { foreignKey: 'userid' })
 };
 exports.initPatientModel = initPatientModel;

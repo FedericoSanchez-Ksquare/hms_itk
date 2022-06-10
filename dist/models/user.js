@@ -36,6 +36,5 @@ const initUserModel = (sequelize) => {
         tableName: 'users',
         sequelize: sequelize
     });
-    //user.hasOne(roles, { foreignKey: 'roleid' })
 };
 exports.initUserModel = initUserModel;

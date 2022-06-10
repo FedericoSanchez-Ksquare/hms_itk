@@ -79,8 +79,7 @@ exports.AppointmentRouter.get("/findAppointmentsDoctor/:doctorId", isAuthenticat
         return res.status(500).send({ error: "something went wrong" });
     }
 }));
-exports.AppointmentRouter.get("/listAppointmentsDoctor/:doctorId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
-    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.AppointmentRouter.get("/listAppointmentsDoctor/:doctorId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { doctorId } = req.params;
     const { filter, value, order } = req.query;
     try {
@@ -112,9 +111,10 @@ exports.AppointmentRouter.get("/allAppointments", isAuthenticated_1.isAuthentica
     }
 }));
 exports.AppointmentRouter.patch("/updateAppointmentTime", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, appointmentDate, appointmentTime } = req.body;
+    const { id } = req.params;
+    const { appointmentDate, appointmentTime } = req.body;
     try {
-        const updatedTime = yield (0, appointments_models_repo_1.updatesTime)(id, appointmentDate, appointmentTime);
+        const updatedTime = yield (0, appointments_models_repo_1.updatesTime)(+id, appointmentDate, appointmentTime);
         res.statusCode = 201;
         res.send({
             id: updatedTime,
@@ -126,10 +126,10 @@ exports.AppointmentRouter.patch("/updateAppointmentTime", isAuthenticated_1.isAu
         return res.status(500).send({ error: "something went wrong" });
     }
 }));
-exports.AppointmentRouter.patch("/disableAppointment", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, is_deleted } = req.body;
+exports.AppointmentRouter.patch("/disableAppointment/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
     try {
-        const deleted = yield (0, appointments_models_repo_1.deleteAppointments)(id, true);
+        const deleted = yield (0, appointments_models_repo_1.deleteAppointments)(+id, true);
         res.statusCode = 201;
         res.send({
             id: deleted,
@@ -141,10 +141,10 @@ exports.AppointmentRouter.patch("/disableAppointment", isAuthenticated_1.isAuthe
         return res.status(500).send({ error: "something went wrong" });
     }
 }));
-exports.AppointmentRouter.patch("/enableAppointment", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, is_deleted } = req.body;
+exports.AppointmentRouter.patch("/enableAppointment/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
     try {
-        const deleted = yield (0, appointments_models_repo_1.deleteAppointments)(id, false);
+        const deleted = yield (0, appointments_models_repo_1.deleteAppointments)(+id, false);
         res.statusCode = 201;
         res.send({
             id: deleted,

@@ -100,7 +100,7 @@ exports.UserRouter.delete("/:userId", isAuthenticated_1.isAuthenticated, (0, has
     const { userId } = req.params;
     try {
         const disabledUserFB = yield (0, methods_1.disableUserFB)(userId);
-        res.statusCode = 201;
+        res.statusCode = 200;
         res.send({
             id: disabledUserFB,
             message: "User state updated"

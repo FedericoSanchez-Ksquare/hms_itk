@@ -44,11 +44,19 @@ hasRole(
   const { patientId } = req.params;
   try {
     const readAppointment = await readAppointmentsPatient(+patientId)
-    res.statusCode = 201;
-    res.json({
-    id: readAppointment,
-    message: "Appointments for patient with ID= " + patientId
+    if(readAppointment === "Invalid id")
+    {
+      res.statusCode = 400;
+      res.json({
+        message: readAppointment
+      })
+    }else{
+      res.statusCode = 200;
+      res.json({
+      id: readAppointment,
+      message: "Appointments for patient with ID= " + patientId
     });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "something went wrong" });
@@ -65,11 +73,19 @@ hasRole(
   const {limit, offset} = req.query
   try {
     const listAppointment = await listAppointmentsPatient(+patientId, limit ? +limit : 10, offset ? +offset : 0)
-    res.statusCode = 201;
-    res.json({
-      id: listAppointment,
+    if(listAppointment === "Invalid id")
+    {
+      res.statusCode = 400;
+      res.json({
+        message: listAppointment
+      })
+    }else{
+      res.statusCode = 200;
+      res.json({
+      response: listAppointment,
       message: "Appointments for patient with ID=" + patientId
     });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "something went wrong" });
@@ -84,12 +100,21 @@ hasRole(
   async (req: Request, res: Response) => {
   const { doctorId } = req.params;
   try {
+    
     const readAppointmentDoctors = await readAppointmentsDoctor(+doctorId)
-    res.statusCode = 201;
-    res.json({
-      id: readAppointmentDoctors,
-      message: "Appointments for doctor with ID= "+ doctorId
+    if(readAppointmentDoctors === "Invalid id")
+    {
+      res.statusCode = 400;
+      res.json({
+        message: readAppointmentDoctors
+      })
+    }else{
+      res.statusCode = 200;
+      res.json({
+        id: readAppointmentDoctors,
+        message: "Appointments for doctor with ID= "+ doctorId
     });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "something went wrong" });
@@ -102,7 +127,7 @@ AppointmentRouter.get("/listAppointmentsDoctor/:doctorId",
   const {filter, value, order} = req.query
   try {
     const listAppointmentsDoctors = await listAppointmentsDoctor(+doctorId, filter ? filter : "id", value ? value :"", order ? order: "ASC" )
-    res.statusCode = 201;
+    res.statusCode = 200;
     res.json({
       id: listAppointmentsDoctors,
       message: "Appointments for doctor with ID= " +doctorId
@@ -133,7 +158,7 @@ AppointmentRouter.get("/",
 });
 
 //update appointment time and date
-AppointmentRouter.patch("/updateAppointmentTime",
+AppointmentRouter.patch("/updateAppointmentTime/:id",
 isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
   async (req: Request, res: Response) => {
@@ -141,11 +166,20 @@ isAuthenticated,
   const {appointmentDate, appointmentTime} = req.body;
   try {
     const updatedTime = await updatesTime(+id, appointmentDate, appointmentTime);
-    res.statusCode = 201;
-    res.send({
+    if(updatedTime === "Invalid id"){
+      res.statusCode = 400;
+      res.send({
+      message: updatedTime
+    });
+    }
+     else{
+      res.statusCode = 200;
+      res.send({
       id: updatedTime,
       message: "Time on appointment updated"
     });
+
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "something went wrong" });
@@ -160,7 +194,7 @@ async (req: Request, res: Response)=>{
   const {id} = req.params;
   try {
     const deleted = await deleteAppointments(+id)
-    res.statusCode = 201;
+    res.statusCode = 200;
     res.send({
       id: deleted,
       message: "Appointment state updated with ID= " + deleted

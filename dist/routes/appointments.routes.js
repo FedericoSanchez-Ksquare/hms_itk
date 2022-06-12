@@ -36,11 +36,19 @@ exports.AppointmentRouter.get("/findAppointmentsPatient/:patientId", isAuthentic
     const { patientId } = req.params;
     try {
         const readAppointment = yield (0, appointments_models_repo_1.readAppointmentsPatient)(+patientId);
-        res.statusCode = 201;
-        res.json({
-            id: readAppointment,
-            message: "Appointments for patient with ID= " + patientId
-        });
+        if (readAppointment === "Invalid id") {
+            res.statusCode = 400;
+            res.json({
+                message: readAppointment
+            });
+        }
+        else {
+            res.statusCode = 200;
+            res.json({
+                id: readAppointment,
+                message: "Appointments for patient with ID= " + patientId
+            });
+        }
     }
     catch (error) {
         console.log(error);
@@ -53,11 +61,19 @@ exports.AppointmentRouter.get("/listAppointmentsPatient/:patientId", isAuthentic
     const { limit, offset } = req.query;
     try {
         const listAppointment = yield (0, appointments_models_repo_1.listAppointmentsPatient)(+patientId, limit ? +limit : 10, offset ? +offset : 0);
-        res.statusCode = 201;
-        res.json({
-            id: listAppointment,
-            message: "Appointments for patient with ID=" + patientId
-        });
+        if (listAppointment === "Invalid id") {
+            res.statusCode = 400;
+            res.json({
+                message: listAppointment
+            });
+        }
+        else {
+            res.statusCode = 200;
+            res.json({
+                response: listAppointment,
+                message: "Appointments for patient with ID=" + patientId
+            });
+        }
     }
     catch (error) {
         console.log(error);
@@ -69,11 +85,19 @@ exports.AppointmentRouter.get("/findAppointmentsDoctor/:doctorId", isAuthenticat
     const { doctorId } = req.params;
     try {
         const readAppointmentDoctors = yield (0, appointments_models_repo_1.readAppointmentsDoctor)(+doctorId);
-        res.statusCode = 201;
-        res.json({
-            id: readAppointmentDoctors,
-            message: "Appointments for doctor with ID= " + doctorId
-        });
+        if (readAppointmentDoctors === "Invalid id") {
+            res.statusCode = 400;
+            res.json({
+                message: readAppointmentDoctors
+            });
+        }
+        else {
+            res.statusCode = 200;
+            res.json({
+                id: readAppointmentDoctors,
+                message: "Appointments for doctor with ID= " + doctorId
+            });
+        }
     }
     catch (error) {
         console.log(error);
@@ -85,7 +109,7 @@ exports.AppointmentRouter.get("/listAppointmentsDoctor/:doctorId", (req, res) =>
     const { filter, value, order } = req.query;
     try {
         const listAppointmentsDoctors = yield (0, appointments_models_repo_1.listAppointmentsDoctor)(+doctorId, filter ? filter : "id", value ? value : "", order ? order : "ASC");
-        res.statusCode = 201;
+        res.statusCode = 200;
         res.json({
             id: listAppointmentsDoctors,
             message: "Appointments for doctor with ID= " + doctorId
@@ -113,16 +137,24 @@ exports.AppointmentRouter.get("/", isAuthenticated_1.isAuthenticated, (0, hasRol
     }
 }));
 //update appointment time and date
-exports.AppointmentRouter.patch("/updateAppointmentTime", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.AppointmentRouter.patch("/updateAppointmentTime/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { appointmentDate, appointmentTime } = req.body;
     try {
         const updatedTime = yield (0, appointments_models_repo_1.updatesTime)(+id, appointmentDate, appointmentTime);
-        res.statusCode = 201;
-        res.send({
-            id: updatedTime,
-            message: "Time on appointment updated"
-        });
+        if (updatedTime === "Invalid id") {
+            res.statusCode = 400;
+            res.send({
+                message: updatedTime
+            });
+        }
+        else {
+            res.statusCode = 200;
+            res.send({
+                id: updatedTime,
+                message: "Time on appointment updated"
+            });
+        }
     }
     catch (error) {
         console.log(error);
@@ -134,7 +166,7 @@ exports.AppointmentRouter.patch("/:id", isAuthenticated_1.isAuthenticated, (0, h
     const { id } = req.params;
     try {
         const deleted = yield (0, appointments_models_repo_1.deleteAppointments)(+id);
-        res.statusCode = 201;
+        res.statusCode = 200;
         res.send({
             id: deleted,
             message: "Appointment state updated with ID= " + deleted

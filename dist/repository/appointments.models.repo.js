@@ -36,9 +36,13 @@ const readAppointments = (limit, offset) => __awaiter(void 0, void 0, void 0, fu
 exports.readAppointments = readAppointments;
 const readAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (patientId) {
+        const validation = yield appointment_1.appointment.findByPk(patientId);
+        if (patientId === (validation === null || validation === void 0 ? void 0 : validation.patientId)) {
             const readOneAppointmentP = yield appointment_1.appointment.findOne({ where: { patientId: patientId } });
             return readOneAppointmentP;
+        }
+        else {
+            return "Invalid id";
         }
     }
     catch (error) {
@@ -48,9 +52,13 @@ const readAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0,
 exports.readAppointmentsPatient = readAppointmentsPatient;
 const listAppointmentsPatient = (patientId, limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (patientId) {
-            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ where: { patientId: patientId }, limit: limit, offset: offset });
+        const validation = yield appointment_1.appointment.findByPk(patientId);
+        if (patientId === (validation === null || validation === void 0 ? void 0 : validation.patientId)) {
+            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ where: { patientId }, limit, offset });
             return readAllAppointmentsP;
+        }
+        else {
+            return "Invalid id";
         }
     }
     catch (error) {
@@ -60,8 +68,14 @@ const listAppointmentsPatient = (patientId, limit, offset) => __awaiter(void 0, 
 exports.listAppointmentsPatient = listAppointmentsPatient;
 const readAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const readOneAppointmentD = yield appointment_1.appointment.findOne({ where: { doctorId: doctorId } });
-        return readOneAppointmentD;
+        const validation = yield appointment_1.appointment.findByPk(doctorId);
+        if (doctorId === (validation === null || validation === void 0 ? void 0 : validation.doctorId)) {
+            const readOneAppointmentD = yield appointment_1.appointment.findOne({ where: { doctorId } });
+            return readOneAppointmentD;
+        }
+        else {
+            return "Invalid id";
+        }
     }
     catch (error) {
         console.log(error);
@@ -166,9 +180,15 @@ const deleteAppointments = (id) => __awaiter(void 0, void 0, void 0, function* (
 exports.deleteAppointments = deleteAppointments;
 const updatesTime = (id, appointmentTime, appointmentDate) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updateTime = yield appointment_1.appointment.update({ appointmentTime: appointmentTime, appointmentDate: appointmentDate }, { where: { id } });
-        console.log("time updated" + id);
-        return updateTime;
+        const validator = yield appointment_1.appointment.findByPk(id);
+        if (id === (validator === null || validator === void 0 ? void 0 : validator.id)) {
+            const updateTime = yield appointment_1.appointment.update({ appointmentTime: appointmentTime, appointmentDate: appointmentDate }, { where: { id } });
+            console.log("time updated" + id);
+            return updateTime;
+        }
+        else {
+            return "Invalid id";
+        }
     }
     catch (error) {
         console.log(error);

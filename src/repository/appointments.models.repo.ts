@@ -27,9 +27,13 @@ export const readAppointmentsPatient = async(
   patientId: number,
 ) => {
   try {
-    if(patientId){
+    const validation = await appointment.findByPk(patientId)
+    if (patientId === validation?.patientId) {
     const readOneAppointmentP = await appointment.findOne({where: {patientId:patientId}});
     return readOneAppointmentP 
+    }
+    else{
+      return "Invalid id"
     }
   } catch (error) {
     console.log(error)
@@ -42,9 +46,13 @@ export const listAppointmentsPatient = async(
   offset?: number
 ) => {
   try {
-    if (patientId) {
-      const readAllAppointmentsP = await appointment.findAll({where: {patientId:patientId}, limit: limit, offset:offset});
+    const validation = await appointment.findByPk(patientId)
+    if (patientId === validation?.patientId) {
+      const readAllAppointmentsP = await appointment.findAll({where: {patientId}, limit, offset});
       return readAllAppointmentsP
+    }
+    else{
+      return "Invalid id"
     }
   
   } catch (error) {
@@ -56,8 +64,13 @@ export const readAppointmentsDoctor = async(
   doctorId: number
 ) => {
   try {
-    const readOneAppointmentD = await appointment.findOne({where: {doctorId:doctorId}});
+    const validation = await appointment.findByPk(doctorId)
+    if (doctorId === validation?.doctorId) {
+    const readOneAppointmentD = await appointment.findOne({where: {doctorId}});
     return readOneAppointmentD
+    }else{
+      return "Invalid id"
+    }
   } catch (error) {
     console.log(error)
   }
@@ -179,9 +192,14 @@ export const updatesTime = async(
   id: number, appointmentTime: string, appointmentDate: string
 ) =>{
   try {
-    const updateTime = await appointment.update({appointmentTime: appointmentTime, appointmentDate: appointmentDate }, {where:{id}})
-    console.log("time updated"+id);
-    return updateTime
+    const validator = await appointment.findByPk(id)
+    if(id === validator?.id){
+      const updateTime = await appointment.update({appointmentTime: appointmentTime, appointmentDate: appointmentDate }, {where:{id}})
+      console.log("time updated"+id);
+      return updateTime
+    }else{
+      return"Invalid id"
+    }
   } catch (error) {
     console.log(error);
     

@@ -35,7 +35,7 @@ exports.DoctorRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1
 exports.DoctorRouter.get("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const readDoctor = yield (0, doctor_models_repo_1.readDoctors)(req.body.id);
-    res.statusCode = 201;
+    res.statusCode = 200;
     res.json({
         id: readDoctor,
         messages: "Registered doctors:"

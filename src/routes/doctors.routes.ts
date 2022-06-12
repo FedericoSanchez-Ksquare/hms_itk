@@ -32,7 +32,7 @@ hasRole(
   {roles: ["admin"],
    allowSameUser: false}),  async (req: Request, res: Response) => {
   const readDoctor = await readDoctors(req.body.id)
-  res.statusCode = 201;
+  res.statusCode = 200;
   res.json({
     id: readDoctor,
     messages: "Registered doctors:"

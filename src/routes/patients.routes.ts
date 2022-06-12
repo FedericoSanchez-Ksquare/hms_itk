@@ -29,7 +29,7 @@ PatientRouter.get("/",
   async (req: Request, res: Response) => {
   try {
     const readPatient = await readPatients(req.body.id)
-    res.statusCode = 201;
+    res.statusCode = 200;
     res.json({
       id: readPatient,
       message: "Registered patients:"

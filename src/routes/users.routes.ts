@@ -99,7 +99,7 @@ hasRole(
   const { userId } = req.params;
   try {
     const disabledUserFB = await disableUserFB(userId);
-    res.statusCode = 201;
+    res.statusCode = 200;
     res.send({
     id: disabledUserFB,
     message: "User state updated"

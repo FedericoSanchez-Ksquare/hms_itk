@@ -24,11 +24,17 @@ export const readUsers = async(
   }
 }
 export const disableUsers = async(
-  id: number, is_active: boolean
+  id: number
 ) =>{
   try {
-    const disablePatient = await user.update({is_active: is_active}, {where:{id}})
-    return disablePatient
+    const users = await user.findByPk(id)
+    if(users?.is_active.toString() === "false"){
+      const disablePatient = await user.update({is_active: true}, {where:{id}})
+      return disablePatient
+    }else{
+      const disablePatient = await user.update({is_active: false}, {where:{id}})
+      return disablePatient
+    }
   } catch (error) {
     console.log(error);
     

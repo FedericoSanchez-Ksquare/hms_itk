@@ -5,7 +5,8 @@ import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const DoctorRouter = Router();
 
-DoctorRouter.post("/createDoctor",
+//creates doctor
+DoctorRouter.post("/",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
@@ -24,7 +25,12 @@ hasRole(
   }
 });
 
-DoctorRouter.get("/showDoctor", async (req: Request, res: Response) => {
+//shows list of doctors
+DoctorRouter.get("/",
+isAuthenticated,
+hasRole(
+  {roles: ["admin"],
+   allowSameUser: false}),  async (req: Request, res: Response) => {
   const readDoctor = await readDoctors(req.body.id)
   res.statusCode = 201;
   res.json({

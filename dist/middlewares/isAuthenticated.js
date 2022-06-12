@@ -48,7 +48,6 @@ const isAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             error: "No auth",
         });
     }
-    // "Bearer here's.my.JWToken"
     const splittedToken = authorization.split("Bearer ");
     if (splittedToken.length !== 2) {
         res.statusCode = 401;

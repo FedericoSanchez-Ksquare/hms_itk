@@ -4,8 +4,8 @@ import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const PatientRouter = Router();
-
-PatientRouter.post("/createPatient",
+//creates user patient
+PatientRouter.post("/",
   isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
    async (req: Request, res: Response) => {
@@ -22,7 +22,8 @@ PatientRouter.post("/createPatient",
   }
 });
 
-PatientRouter.get("/showPatient",
+// lists the patients
+PatientRouter.get("/",
   isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }), 
   async (req: Request, res: Response) => {

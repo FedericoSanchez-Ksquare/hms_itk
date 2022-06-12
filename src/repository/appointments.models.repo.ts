@@ -157,11 +157,18 @@ export const listAllAppointments = async(
 
 
 export const deleteAppointments = async(
-  id:number, is_deleted: boolean
+  id:number
 )=>{
   try {
-    const deleteAppointment = await appointment.update({is_deleted: is_deleted},{where: {id}})
-    return deleteAppointment
+    const appointments = await appointment.findByPk(id)
+    if(appointments?.is_deleted.toString() === "false")
+    {
+      const deleteAppointment = await appointment.update({is_deleted: true},{where: {id}})
+      return deleteAppointment
+    }else{
+      const deleteAppointment = await appointment.update({is_deleted: false},{where: {id}})
+      return deleteAppointment
+    }
   } catch (error) {
     console.log(error);
     

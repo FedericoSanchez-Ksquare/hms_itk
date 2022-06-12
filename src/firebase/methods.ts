@@ -31,14 +31,20 @@ const mapToUser = (user: admin.auth.UserRecord) => {
   };
 };
 
-export const disableUserFB = async (uid: string, disabled: boolean) => {
-  const user = await admin.auth().updateUser(uid, { disabled });
-  
-  return mapToUser(user);
+export const disableUserFB = async (uid: string) => {
+  const test = await admin.auth().getUser(uid)
+  test.disabled
+  if(test.disabled === false){
+   const user = await admin.auth().updateUser(uid, { disabled: true });
+  return mapToUser(user); 
+  }else{
+    const user = await admin.auth().updateUser(uid, { disabled: false });
+  return mapToUser(user); 
+  }
 };
 
-export const readUser = async (userId: string) => {
-  const user = await admin.auth().getUser(userId);
+export const readUser = async (uid?: any) => {
+  const user = await admin.auth().getUser(uid);
 
   return mapToUser(user);
 };

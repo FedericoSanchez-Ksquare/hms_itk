@@ -14,7 +14,8 @@ import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const AppointmentRouter = Router();
 
-AppointmentRouter.post("/create",
+//creates appointments
+AppointmentRouter.post("/",
   isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }), 
   async (req: Request, res: Response) => {
@@ -111,7 +112,8 @@ AppointmentRouter.get("/listAppointmentsDoctor/:doctorId",
     return res.status(500).send({ error: "something went wrong" });
   }
 });
-AppointmentRouter.get("/allAppointments",
+//shows all appointments or filter appointments
+AppointmentRouter.get("/",
   isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: false }),
   async (req: Request, res: Response) => {
@@ -130,6 +132,7 @@ AppointmentRouter.get("/allAppointments",
     }
 });
 
+//update appointment time and date
 AppointmentRouter.patch("/updateAppointmentTime",
 isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
@@ -149,34 +152,18 @@ isAuthenticated,
   }
 });
 
-AppointmentRouter.patch("/disableAppointment/:id", 
-isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: true }),
-async (req: Request, res: Response)=>{
-  const {id} =req.params
-  try {
-    const deleted = await deleteAppointments(+id, true)
-    res.statusCode = 201;
-    res.send({
-      id: deleted,
-      message: "Appointment disbled with ID= " + deleted
-  });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
-  }
-});
-AppointmentRouter.patch("/enableAppointment/:id",
+// enables and disables appointments
+AppointmentRouter.patch("/:id",
 isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }),
 async (req: Request, res: Response)=>{
   const {id} = req.params;
   try {
-    const deleted = await deleteAppointments(+id, false)
+    const deleted = await deleteAppointments(+id)
     res.statusCode = 201;
     res.send({
       id: deleted,
-      message: "Appointment enabled with ID= " + deleted
+      message: "Appointment state updated with ID= " + deleted
   });
   } catch (error) {
     console.log(error);

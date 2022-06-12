@@ -1,11 +1,12 @@
 import { Router, Request, Response } from "express";
-import {createUserFB, disableUserFB, getAllUsers} from "../firebase/methods";
+import {createUserFB, disableUserFB, getAllUsers,readUser} from "../firebase/methods";
 import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 
 export const UserRouter = Router();
-UserRouter.post("/createUser", async (req: Request, res: Response) => {
+//create user patient
+UserRouter.post("/patient", async (req: Request, res: Response) => {
   const { displayName,email,password,role } = req.body;
   if (role !== "patient") {
     return res.status(400).send({
@@ -17,13 +18,15 @@ UserRouter.post("/createUser", async (req: Request, res: Response) => {
     res.statusCode = 201;
     res.send({
     id: newUserId,
-    message: "General user created"
+    message: "Patient user created"
   });
   } catch (error) {
     console.log(error);
   }
 });
-UserRouter.post("/createAdmin", 
+
+//creates user admin
+UserRouter.post("/admin", 
 isAuthenticated,
 hasRole(
   {roles: [""],
@@ -45,8 +48,8 @@ hasRole(
     console.log(error);
   }
 });
-
-UserRouter.post("/createUserDoctor", async (req: Request, res: Response) => {
+// creates user doctor
+UserRouter.post("/doctor", async (req: Request, res: Response) => {
   const { displayName,email,password,role } = req.body;
 
   if (role !== "doctor") {
@@ -67,17 +70,26 @@ UserRouter.post("/createUserDoctor", async (req: Request, res: Response) => {
   }
 });
 
-UserRouter.get("/",
+UserRouter.get("/:uid?",
   async (req: Request, res: Response) => {
+    const { uid } = req.params;
     try {
-      const users = await getAllUsers();
-      res.status(200).send(users);
+      if(uid === null || uid === undefined){
+        const users = await getAllUsers();
+        res.status(200).send(users);
+      }
+      else{
+        const users = await readUser(uid ? uid:"");
+        res.status(200).send(users);
+      }
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: "something went wrong" });
     }
   }
 );
+
+//enable disables users
 UserRouter.delete("/:userId", 
 isAuthenticated,
 hasRole(
@@ -85,18 +97,12 @@ hasRole(
    allowSameUser:true}),
   async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const {isDisabled} = req.body;
-  if (isDisabled === undefined || isDisabled === null) {
-      return res.status(400).send({
-        error: "no fields to update",
-      });
-    }
   try {
-    const disabledUserFB = await disableUserFB(userId, isDisabled );
+    const disabledUserFB = await disableUserFB(userId);
     res.statusCode = 201;
     res.send({
     id: disabledUserFB,
-    message: "User updated"
+    message: "User state updated"
   });
   } catch (error) {
     console.log(error);

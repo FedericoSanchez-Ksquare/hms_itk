@@ -147,10 +147,17 @@ const listAllAppointments = (id, filter, value, order, limit, offset) => __await
     }
 });
 exports.listAllAppointments = listAllAppointments;
-const deleteAppointments = (id, is_deleted) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteAppointments = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deleteAppointment = yield appointment_1.appointment.update({ is_deleted: is_deleted }, { where: { id } });
-        return deleteAppointment;
+        const appointments = yield appointment_1.appointment.findByPk(id);
+        if ((appointments === null || appointments === void 0 ? void 0 : appointments.is_deleted.toString()) === "false") {
+            const deleteAppointment = yield appointment_1.appointment.update({ is_deleted: true }, { where: { id } });
+            return deleteAppointment;
+        }
+        else {
+            const deleteAppointment = yield appointment_1.appointment.update({ is_deleted: false }, { where: { id } });
+            return deleteAppointment;
+        }
     }
     catch (error) {
         console.log(error);

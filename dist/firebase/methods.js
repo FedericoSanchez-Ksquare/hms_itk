@@ -55,13 +55,21 @@ const mapToUser = (user) => {
         isDisabled: user.disabled,
     };
 };
-const disableUserFB = (uid, disabled) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield admin.auth().updateUser(uid, { disabled });
-    return mapToUser(user);
+const disableUserFB = (uid) => __awaiter(void 0, void 0, void 0, function* () {
+    const test = yield admin.auth().getUser(uid);
+    test.disabled;
+    if (test.disabled === false) {
+        const user = yield admin.auth().updateUser(uid, { disabled: true });
+        return mapToUser(user);
+    }
+    else {
+        const user = yield admin.auth().updateUser(uid, { disabled: false });
+        return mapToUser(user);
+    }
 });
 exports.disableUserFB = disableUserFB;
-const readUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield admin.auth().getUser(userId);
+const readUser = (uid) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield admin.auth().getUser(uid);
     return mapToUser(user);
 });
 exports.readUser = readUser;

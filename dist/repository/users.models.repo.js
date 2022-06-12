@@ -34,10 +34,17 @@ const readUsers = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.readUsers = readUsers;
-const disableUsers = (id, is_active) => __awaiter(void 0, void 0, void 0, function* () {
+const disableUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const disablePatient = yield user_1.user.update({ is_active: is_active }, { where: { id } });
-        return disablePatient;
+        const users = yield user_1.user.findByPk(id);
+        if ((users === null || users === void 0 ? void 0 : users.is_active.toString()) === "false") {
+            const disablePatient = yield user_1.user.update({ is_active: true }, { where: { id } });
+            return disablePatient;
+        }
+        else {
+            const disablePatient = yield user_1.user.update({ is_active: false }, { where: { id } });
+            return disablePatient;
+        }
     }
     catch (error) {
         console.log(error);

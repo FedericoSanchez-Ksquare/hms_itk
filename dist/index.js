@@ -56,9 +56,6 @@ app.use("/users", users_routes_1.UserRouter);
 app.use("/patient", patients_routes_1.PatientRouter);
 app.use("/doctor", doctors_routes_1.DoctorRouter);
 app.use("/appointment", appointments_routes_1.AppointmentRouter);
-app.get("/", (req, res) => {
-    res.send(req.originalUrl);
-});
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, models_1.startSequelize)(db_name, db_password, db_host, db_username);

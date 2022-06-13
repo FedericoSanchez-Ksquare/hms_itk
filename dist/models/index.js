@@ -16,7 +16,6 @@ const startSequelize = (db_name, db_password, db_hostname, db_username) => {
     for (const initModel of models) {
         initModel(exports.sequelize);
     }
-    //sequelize.sync( {force: true});
     exports.sequelize.sync();
 };
 exports.startSequelize = startSequelize;

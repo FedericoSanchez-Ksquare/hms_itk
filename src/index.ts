@@ -27,10 +27,6 @@ app.use("/doctor", DoctorRouter);
 app.use("/appointment", AppointmentRouter);
 
 
-app.get("/", (req: Request, res: Response) => {
-  res.send(req.originalUrl);
-});
-
 app.listen(port, async () => {
   try {
     startSequelize(db_name, db_password, db_host, db_username);

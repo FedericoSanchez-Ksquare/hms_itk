@@ -8,7 +8,7 @@ export let sequelize: Sequelize
 
 const models =[initUserModel, initPatientModel,initDoctorModel, initAppointmentsModel]
 
-export const startSequelize = (
+export const  startSequelize = (
   db_name: string,
   db_password: string,
   db_hostname: string,
@@ -23,7 +23,6 @@ export const startSequelize = (
   for (const initModel of models) {
     initModel(sequelize);
   }
-  //sequelize.sync( {force: true});
   sequelize.sync();
 
 

@@ -17,19 +17,11 @@ const isAuthenticated_1 = require("../middlewares/isAuthenticated");
 exports.UserRouter = (0, express_1.Router)();
 //create user patient
 exports.UserRouter.post("/patient", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { displayName, email, password, role } = req.body;
-    if (role !== "patient") {
-        return res.status(400).send({
-            Error: "Invalid Role"
-        });
-    }
+    const { displayName, email, password } = req.body;
     try {
-        const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, role, false);
+        const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, "patient", false);
         res.statusCode = 201;
-        res.send({
-            id: newUserId,
-            message: "Patient user created"
-        });
+        res.send(newUserId);
     }
     catch (error) {
         console.log(error);
@@ -77,7 +69,9 @@ exports.UserRouter.post("/doctor", (req, res) => __awaiter(void 0, void 0, void 
         return res.status(500).send({ error: "something went wrong" });
     }
 }));
-exports.UserRouter.get("/:uid?", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//lists users
+exports.UserRouter.get("/:uid?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { uid } = req.params;
     try {
         if (uid === null || uid === undefined) {

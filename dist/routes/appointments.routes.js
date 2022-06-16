@@ -16,7 +16,8 @@ const hasRoles_1 = require("../middlewares/hasRoles");
 const isAuthenticated_1 = require("../middlewares/isAuthenticated");
 exports.AppointmentRouter = (0, express_1.Router)();
 //creates appointments
-exports.AppointmentRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.AppointmentRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId } = req.body;
     try {
         const newAppointmentId = yield (0, appointments_models_repo_1.createAppointments)(appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId);
@@ -31,31 +32,8 @@ exports.AppointmentRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRo
         return res.status(500).send({ error: "something went wrong" });
     }
 }));
-exports.AppointmentRouter.get("/findAppointmentsPatient/:patientId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
-    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { patientId } = req.params;
-    try {
-        const readAppointment = yield (0, appointments_models_repo_1.readAppointmentsPatient)(+patientId);
-        if (readAppointment === "Invalid id") {
-            res.statusCode = 400;
-            res.json({
-                message: readAppointment
-            });
-        }
-        else {
-            res.statusCode = 200;
-            res.json({
-                id: readAppointment,
-                message: "Appointments for patient with ID= " + patientId
-            });
-        }
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
-    }
-}));
-exports.AppointmentRouter.get("/listAppointmentsPatient/:patientId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+//list patient appointments
+exports.AppointmentRouter.get("/patients/:patientId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { patientId } = req.params;
     const { limit, offset } = req.query;
@@ -69,10 +47,7 @@ exports.AppointmentRouter.get("/listAppointmentsPatient/:patientId", isAuthentic
         }
         else {
             res.statusCode = 200;
-            res.json({
-                response: listAppointment,
-                message: "Appointments for patient with ID=" + patientId
-            });
+            res.send(listAppointment);
         }
     }
     catch (error) {
@@ -80,35 +55,19 @@ exports.AppointmentRouter.get("/listAppointmentsPatient/:patientId", isAuthentic
         return res.status(500).send({ error: "something went wrong" });
     }
 }));
-exports.AppointmentRouter.get("/findAppointmentsDoctor/:doctorId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+//list doctors appointments
+exports.AppointmentRouter.get("/doctors/:doctorId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { doctorId } = req.params;
+    const { orderBy, order, appointmentDate, appointmentTime, is_deleted, patientId } = req.query;
+    let queryParams = {
+        appointmentDate,
+        appointmentTime,
+        is_deleted,
+        patientId
+    };
     try {
-        const readAppointmentDoctors = yield (0, appointments_models_repo_1.readAppointmentsDoctor)(+doctorId);
-        if (readAppointmentDoctors === "Invalid id") {
-            res.statusCode = 400;
-            res.json({
-                message: readAppointmentDoctors
-            });
-        }
-        else {
-            res.statusCode = 200;
-            res.json({
-                id: readAppointmentDoctors,
-                message: "Appointments for doctor with ID= " + doctorId
-            });
-        }
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
-    }
-}));
-exports.AppointmentRouter.get("/listAppointmentsDoctor/:doctorId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { doctorId } = req.params;
-    const { filter, value, order } = req.query;
-    try {
-        const listAppointmentsDoctors = yield (0, appointments_models_repo_1.listAppointmentsDoctor)(+doctorId, filter ? filter : "id", value ? value : "", order ? order : "ASC");
+        const listAppointmentsDoctors = yield (0, appointments_models_repo_1.listAppointmentsDoctor)(+doctorId, queryParams, order ? order : "ASC", orderBy ? orderBy : "id");
         res.statusCode = 200;
         res.json({
             id: listAppointmentsDoctors,
@@ -121,56 +80,56 @@ exports.AppointmentRouter.get("/listAppointmentsDoctor/:doctorId", (req, res) =>
     }
 }));
 //shows all appointments or filter appointments
-exports.AppointmentRouter.get("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, filter, value, order, limit, offset } = req.query;
+exports.AppointmentRouter.get("/all", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { orderBy, order, appointmentDate, appointmentTime, is_deleted, patientId, doctorId, limit, offset } = req.query;
+    let queryParams = {
+        appointmentDate,
+        appointmentTime,
+        is_deleted,
+        patientId,
+        doctorId
+    };
     try {
-        const readAppointment = yield (0, appointments_models_repo_1.listAllAppointments)(id ? +id : 0, filter ? filter : "id", value ? value : "false", order ? order : "ASC", limit ? +limit : 10, offset ? +offset : 0);
+        const readAppointment = yield (0, appointments_models_repo_1.listAllAppointments)(queryParams, orderBy ? orderBy : "id", order ? order : "ASC", limit ? +limit : 10, offset ? +offset : 0);
         res.statusCode = 200;
-        res.json({
-            id: readAppointment,
-            message: "Show all appointments"
-        });
+        res.send(readAppointment);
     }
     catch (error) {
         console.log(error);
         return res.status(500).send({ error: "something went wrong" });
     }
 }));
-//update appointment time and date
-exports.AppointmentRouter.patch("/updateAppointmentTime/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.AppointmentRouter.get("/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { appointmentDate, appointmentTime } = req.body;
     try {
-        const updatedTime = yield (0, appointments_models_repo_1.updatesTime)(+id, appointmentDate, appointmentTime);
-        if (updatedTime === "Invalid id") {
+        const readAppointment = yield (0, appointments_models_repo_1.findAppointment)(+id);
+        if (readAppointment === "Invalid id") {
             res.statusCode = 400;
-            res.send({
-                message: updatedTime
+            res.json({
+                message: readAppointment
             });
         }
         else {
             res.statusCode = 200;
-            res.send({
-                id: updatedTime,
-                message: "Time on appointment updated"
-            });
+            res.send(readAppointment);
         }
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
     }
 }));
-// enables and disables appointments
-exports.AppointmentRouter.patch("/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// updates appointments
+exports.AppointmentRouter.patch("/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    const { is_deleted, appointmentDate, appointmentTime } = req.body;
+    const payload = { is_deleted, appointmentDate, appointmentTime };
     try {
-        const deleted = yield (0, appointments_models_repo_1.deleteAppointments)(+id);
+        const deleted = yield (0, appointments_models_repo_1.updateAppointment)(+id, payload);
         res.statusCode = 200;
-        res.send({
-            id: deleted,
-            message: "Appointment state updated with ID= " + deleted
-        });
+        res.send(deleted);
     }
     catch (error) {
         console.log(error);

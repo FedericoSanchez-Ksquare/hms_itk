@@ -7,19 +7,11 @@ import { isAuthenticated } from "../middlewares/isAuthenticated";
 export const UserRouter = Router();
 //create user patient
 UserRouter.post("/patient", async (req: Request, res: Response) => {
-  const { displayName,email,password,role } = req.body;
-  if (role !== "patient") {
-    return res.status(400).send({
-      Error: "Invalid Role"
-    })
-  }
+  const { displayName,email,password } = req.body;
   try {
-    const newUserId = await createUserFB(displayName,email, password,role, false );
+    const newUserId = await createUserFB(displayName,email, password,"patient", false );
     res.statusCode = 201;
-    res.send({
-    id: newUserId,
-    message: "Patient user created"
-  });
+    res.send(newUserId);
   } catch (error) {
     console.log(error);
   }
@@ -69,8 +61,12 @@ UserRouter.post("/doctor", async (req: Request, res: Response) => {
     return res.status(500).send({ error: "something went wrong" });
   }
 });
-
+//lists users
 UserRouter.get("/:uid?",
+isAuthenticated,
+hasRole(
+  {roles: ["admin"],
+   allowSameUser:true}), 
   async (req: Request, res: Response) => {
     const { uid } = req.params;
     try {

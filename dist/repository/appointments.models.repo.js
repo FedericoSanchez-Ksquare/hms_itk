@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatesTime = exports.deleteAppointments = exports.listAllAppointments = exports.listAppointmentsDoctor = exports.readAppointmentsDoctor = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
+exports.updateAppointment = exports.updatesTime = exports.deleteAppointments = exports.findAppointment = exports.listAllAppointments = exports.listAppointmentsDoctor = exports.readAppointmentsDoctor = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
 const appointment_1 = require("../models/appointment");
 const createAppointments = (appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -82,85 +82,72 @@ const readAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.readAppointmentsDoctor = readAppointmentsDoctor;
-const listAppointmentsDoctor = (id, filter, value, order) => __awaiter(void 0, void 0, void 0, function* () {
+const listAppointmentsDoctor = (id, queryParams, order, orderBy) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let listAllAppointmentsD;
-        switch (filter) {
-            case "patientId":
-                if (value === "patientId" || value === "doctorId") {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[value, order]], where: { doctorId: id } });
-                }
-                else {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, patientId: value } });
-                }
-                break;
-            case "doctorId":
-                if (value === "doctorId" || value === "patientId") {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[value, order]], where: { doctorId: id } });
-                }
-                else {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id } });
-                }
-                break;
-            case "appointmentDate":
-                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, appointmentDate: value } });
-                break;
-            case "appointmentTime":
-                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, appointmentTime: value } });
-                break;
-            case "is_deleted":
-                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id, is_deleted: value } });
-                break;
-            default:
-                listAllAppointmentsD = yield appointment_1.appointment.findAll({ where: { doctorId: id } });
-                break;
+        let where = {
+            doctorId: id
+        };
+        if (queryParams.patientId) {
+            where.patientId = queryParams.patientId;
         }
-        return listAllAppointmentsD;
+        if (queryParams.appointmentDate) {
+            where.appointmentDate = queryParams.appointmentDate;
+        }
+        if (queryParams.appointmentTime) {
+            where.appointmentTime = queryParams.appointmentTime;
+        }
+        if (queryParams.is_deleted) {
+            where.is_deleted = queryParams.is_deleted;
+        }
+        const listAppointments = yield appointment_1.appointment.findAll({ order: [[orderBy, order]], where });
+        return listAppointments;
     }
     catch (error) {
         console.log(error);
     }
 });
 exports.listAppointmentsDoctor = listAppointmentsDoctor;
-const listAllAppointments = (id, filter, value, order, limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
+const listAllAppointments = (queryParams, orderBy, order, limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let listAllAppointmentsD;
-        switch (filter) {
-            case "patientId":
-                if (id > 0) {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { patientId: id }, limit: limit, offset: offset });
-                }
-                else {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['patientId', order]], limit: limit, offset: offset });
-                }
-                break;
-            case "doctorId":
-                if (id > 0) {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['id', order]], where: { doctorId: id }, limit: limit, offset: offset });
-                }
-                else {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [['doctorId', order]], limit: limit, offset: offset });
-                }
-                break;
-            case "is_deleted":
-                if (value === "false") {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[filter, order]], where: { is_deleted: "false" }, limit: limit, offset: offset });
-                }
-                if (value === "true") {
-                    listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[filter, order]], where: { is_deleted: "true" }, limit: limit, offset: offset });
-                }
-                break;
-            default:
-                listAllAppointmentsD = yield appointment_1.appointment.findAll({ order: [[filter, order]], limit: limit, offset: offset });
-                break;
+        let where = {};
+        if (queryParams.patientId) {
+            where.patientId = queryParams.patientId;
         }
-        return listAllAppointmentsD;
+        if (queryParams.doctorId) {
+            where.patientId = queryParams.patientId;
+        }
+        if (queryParams.appointmentDate) {
+            where.appointmentDate = queryParams.appointmentDate;
+        }
+        if (queryParams.appointmentTime) {
+            where.appointmentTime = queryParams.appointmentTime;
+        }
+        if (queryParams.is_deleted) {
+            where.is_deleted = queryParams.is_deleted;
+        }
+        const listAppointments = yield appointment_1.appointment.findAll({ order: [[orderBy, order]], where, limit, offset });
+        return listAppointments;
     }
     catch (error) {
         console.log(error);
     }
 });
 exports.listAllAppointments = listAllAppointments;
+const findAppointment = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const appointments = yield appointment_1.appointment.findByPk(id);
+        if (id === (appointments === null || appointments === void 0 ? void 0 : appointments.id)) {
+            return appointments;
+        }
+        else {
+            return "Invalid id";
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.findAppointment = findAppointment;
 const deleteAppointments = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const appointments = yield appointment_1.appointment.findByPk(id);
@@ -195,3 +182,12 @@ const updatesTime = (id, appointmentTime, appointmentDate) => __awaiter(void 0, 
     }
 });
 exports.updatesTime = updatesTime;
+const updateAppointment = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield appointment_1.appointment.update(payload, { where: { id } });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.updateAppointment = updateAppointment;

@@ -1,13 +1,11 @@
 import { Router, Request, Response } from "express";
 import { 
   createAppointments,
-  updatesTime, 
-  deleteAppointments, 
-  readAppointmentsPatient,
   listAppointmentsPatient,
-  readAppointmentsDoctor,
   listAppointmentsDoctor,
-  listAllAppointments
+  listAllAppointments,
+  findAppointment,
+  updateAppointment
 } from "../repository/appointments.models.repo";
 import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
@@ -16,8 +14,10 @@ export const AppointmentRouter = Router();
 
 //creates appointments
 AppointmentRouter.post("/",
-  isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: true }), 
+isAuthenticated,
+hasRole(
+  {roles: ["admin"],
+   allowSameUser:true}), 
   async (req: Request, res: Response) => {
   const { appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId } = req.body;
   try {
@@ -33,37 +33,8 @@ AppointmentRouter.post("/",
   }
 });
 
-
-
-AppointmentRouter.get("/findAppointmentsPatient/:patientId",
-isAuthenticated,
-hasRole(
-  {roles: ["admin"],
-   allowSameUser:true}), 
-   async (req: Request, res: Response) => {
-  const { patientId } = req.params;
-  try {
-    const readAppointment = await readAppointmentsPatient(+patientId)
-    if(readAppointment === "Invalid id")
-    {
-      res.statusCode = 400;
-      res.json({
-        message: readAppointment
-      })
-    }else{
-      res.statusCode = 200;
-      res.json({
-      id: readAppointment,
-      message: "Appointments for patient with ID= " + patientId
-    });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
-  }
-});
-
-AppointmentRouter.get("/listAppointmentsPatient/:patientId",
+//list patient appointments
+AppointmentRouter.get("/patients/:patientId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
@@ -81,10 +52,7 @@ hasRole(
       })
     }else{
       res.statusCode = 200;
-      res.json({
-      response: listAppointment,
-      message: "Appointments for patient with ID=" + patientId
-    });
+      res.send(listAppointment);
     }
   } catch (error) {
     console.log(error);
@@ -92,41 +60,23 @@ hasRole(
   }
 });
 
-AppointmentRouter.get("/findAppointmentsDoctor/:doctorId",
+//list doctors appointments
+AppointmentRouter.get("/doctors/:doctorId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
-  allowSameUser: true}), 
+   allowSameUser:true}), 
   async (req: Request, res: Response) => {
   const { doctorId } = req.params;
-  try {
-    
-    const readAppointmentDoctors = await readAppointmentsDoctor(+doctorId)
-    if(readAppointmentDoctors === "Invalid id")
-    {
-      res.statusCode = 400;
-      res.json({
-        message: readAppointmentDoctors
-      })
-    }else{
-      res.statusCode = 200;
-      res.json({
-        id: readAppointmentDoctors,
-        message: "Appointments for doctor with ID= "+ doctorId
-    });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
+  const {orderBy, order,appointmentDate, appointmentTime, is_deleted, patientId } = req.query
+  let queryParams = {
+    appointmentDate,
+    appointmentTime,
+    is_deleted,
+    patientId
   }
-});
-
-AppointmentRouter.get("/listAppointmentsDoctor/:doctorId",
-  async (req: Request, res: Response) => {
-  const { doctorId } = req.params;
-  const {filter, value, order} = req.query
   try {
-    const listAppointmentsDoctors = await listAppointmentsDoctor(+doctorId, filter ? filter : "id", value ? value :"", order ? order: "ASC" )
+    const listAppointmentsDoctors = await listAppointmentsDoctor(+doctorId, queryParams, order ? order: "ASC", orderBy ? orderBy: "id" )
     res.statusCode = 200;
     res.json({
       id: listAppointmentsDoctors,
@@ -138,67 +88,72 @@ AppointmentRouter.get("/listAppointmentsDoctor/:doctorId",
   }
 });
 //shows all appointments or filter appointments
-AppointmentRouter.get("/",
-  isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: false }),
+AppointmentRouter.get("/all",
+isAuthenticated,
+hasRole(
+  {roles: ["admin"],
+   allowSameUser:true}), 
   async (req: Request, res: Response) => {
-    const {id,filter, value, order,limit, offset} = req.query
+    const {orderBy, order,appointmentDate, appointmentTime, is_deleted, patientId, doctorId,limit,offset} = req.query
+    let queryParams = {
+    appointmentDate,
+    appointmentTime,
+    is_deleted,
+    patientId,
+    doctorId
+  }
     try {
-      const readAppointment = 
-      await listAllAppointments(id? +id: 0,filter ? filter : "id",  value ? value :"false", order ? order: "ASC", limit ? +limit : 10, offset ? +offset : 0 )
+      const readAppointment = await listAllAppointments(queryParams,orderBy ? orderBy: "id", order ? order: "ASC", limit ? +limit : 10, offset ? +offset : 0 )
       res.statusCode = 200;
-      res.json({
-        id: readAppointment,
-        message: "Show all appointments"
-      });
+      res.send(readAppointment);
     } catch (error) {
       console.log(error);
       return res.status(500).send({ error: "something went wrong" });
     }
 });
 
-//update appointment time and date
-AppointmentRouter.patch("/updateAppointmentTime/:id",
-isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: true }),
-  async (req: Request, res: Response) => {
-  const {id} =req.params;
-  const {appointmentDate, appointmentTime} = req.body;
-  try {
-    const updatedTime = await updatesTime(+id, appointmentDate, appointmentTime);
-    if(updatedTime === "Invalid id"){
-      res.statusCode = 400;
-      res.send({
-      message: updatedTime
-    });
-    }
-     else{
-      res.statusCode = 200;
-      res.send({
-      id: updatedTime,
-      message: "Time on appointment updated"
-    });
+AppointmentRouter.get("/:id",
+isAuthenticated,hasRole(
+  {roles: ["admin"],
+  allowSameUser:true}),
+ async (req:Request, res: Response) => {
+  const {id} = req.params
 
+  try {
+    const readAppointment = await findAppointment(+id)
+    if(readAppointment === "Invalid id")
+    {
+      res.statusCode = 400;
+      res.json({
+        message: readAppointment
+      })
     }
+    else{
+      res.statusCode = 200;
+      res.send(readAppointment)
+    }
+
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
+    
   }
-});
+  
+ });
 
-// enables and disables appointments
+// updates appointments
 AppointmentRouter.patch("/:id",
 isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: true }),
+hasRole(
+  {roles: ["admin"],
+   allowSameUser:true}), 
 async (req: Request, res: Response)=>{
   const {id} = req.params;
+  const {is_deleted, appointmentDate, appointmentTime} = req.body
+  const payload = {is_deleted, appointmentDate, appointmentTime}
   try {
-    const deleted = await deleteAppointments(+id)
+    const deleted = await updateAppointment(+id, payload)
     res.statusCode = 200;
-    res.send({
-      id: deleted,
-      message: "Appointment state updated with ID= " + deleted
-  });
+    res.send(deleted);
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "something went wrong" });

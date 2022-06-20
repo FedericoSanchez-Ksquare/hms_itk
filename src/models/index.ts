@@ -23,6 +23,7 @@ export const  startSequelize = (
   for (const initModel of models) {
     initModel(sequelize);
   }
+ 
   sequelize.sync();
 
 

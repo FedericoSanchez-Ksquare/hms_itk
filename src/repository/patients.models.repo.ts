@@ -1,30 +1,34 @@
 import { patient } from "../models/patient";
 
 
-export const createPatient = async (birth: string, weigth: number, height: number, gender: string, address:string, userId: string ) => {
+export const createPatient = async (firstName: string, lastName: string, birth: string, weigth: number, height: number, gender: string, address:string, userId: string ) => {
   try {
-    const newPatient = await patient.create({
+    const newPatient = await patient.create({firstName, lastName,
       birth, weigth, height, gender, address, userId
     });
-    console.log("Patient created with id= "+newPatient.id);
-    return newPatient.id;
+    return newPatient;
   } catch (error) {
-    console.error(error);
+    throw new Error("Can't create patient");
   }
 };
 
 export const readPatients = async(
-  id: number
 ) => {
   try {
-    if(id){
-      const readPatient = await patient.findByPk(id);
-      return readPatient
-    }else{
-      const readPatient = await patient.findAll();
-      return readPatient
-    }
+    const readPatient = await patient.findAll();
+    return readPatient
   } catch (error) {
-    console.log(error)
+    throw new Error("Can't read patients");
+  }
+}
+export const readPatient = async(
+  userId: string
+) => {
+  try {
+    const readPatient = await patient.findOne({where: {userId}});
+    return readPatient
+
+  } catch (error) {
+    throw new Error("Can't read patient");
   }
 }

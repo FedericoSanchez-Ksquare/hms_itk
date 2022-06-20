@@ -1,41 +1,37 @@
 import { Router, Request, Response } from "express";
-import { createPatient,readPatients } from "../repository/patients.models.repo";
+import { createPatient,readPatients,readPatient } from "../repository/patients.models.repo";
 import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 export const PatientRouter = Router();
 //creates user patient
 PatientRouter.post("/",
-  isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: true }),
    async (req: Request, res: Response) => {
-  const { birth, weigth, height, gender, address, userId } = req.body;
+  const {firstName, lastName, birth, weigth, height, gender, address, userId } = req.body;
   try {
-    const newPatientId = await createPatient(birth, weigth, height, gender, address,userId );
+    const newPatientId = await createPatient(firstName, lastName,birth, weigth, height, gender, address,userId );
     res.statusCode = 201;
-    res.send({
-      id: newPatientId,
-      message: "Patient created with ID= " + newPatientId
-  });
+    res.send(newPatientId);
   } catch (error) {
-    console.log(error);
+    return res.status(500).send({ error: "Couln't create patient" });
   }
 });
 
 // lists the patients
-PatientRouter.get("/",
+PatientRouter.get("/:userId?",
   isAuthenticated,
   hasRole({ roles: ["admin"], allowSameUser: true }), 
   async (req: Request, res: Response) => {
+  const { userId } = req.params;
   try {
-    const readPatient = await readPatients(req.body.id)
-    res.statusCode = 200;
-    res.json({
-      id: readPatient,
-      message: "Registered patients:"
-  });
+    if(userId === null || userId === undefined){
+    const listPatients = await readPatients()
+    res.status(200).send(listPatients);
+    }else{
+      const patient = await readPatient(userId ? userId:"")
+      res.status(200).send(patient);
+    }
   } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
+    return res.status(500).send({ error: "Couldn't get patients" });
   }
 });

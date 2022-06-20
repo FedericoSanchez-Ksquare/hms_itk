@@ -9,11 +9,20 @@ export const UserRouter = Router();
 UserRouter.post("/patient", async (req: Request, res: Response) => {
   const { displayName,email,password } = req.body;
   try {
-    const newUserId = await createUserFB(displayName,email, password,"patient", false );
-    res.statusCode = 201;
-    res.send(newUserId);
+    if(!email || !password)
+    {
+      res.statusCode = 400;
+      res.send({
+        message: "Missing fields"
+      })
+    }
+    else{
+      const newUserId = await createUserFB(displayName,email, password,"patient", false );
+      res.statusCode = 201;
+      res.send(newUserId);
+    }
   } catch (error) {
-    console.log(error);
+   return res.status(500).send({ error: "Couldn't create patient" });
   }
 });
 
@@ -23,64 +32,46 @@ isAuthenticated,
 hasRole(
   {roles: [""],
    allowSameUser:false}), async (req: Request, res: Response) => {
-  const { displayName,email,password,role } = req.body;
-  if (role !== "admin") {
-    return res.status(400).send({
-      Error: "Invalid Role"
-    })
-  }
+  const { displayName,email,password } = req.body;
   try {
-    const newUserId = await createUserFB(displayName,email, password,role, false );
+    const newUserId = await createUserFB(displayName,email, password,"admin", false );
     res.statusCode = 201;
-    res.send({
-    id: newUserId,
-    message: "Admin user created"
-  });
+    res.send(newUserId);
   } catch (error) {
-    console.log(error);
+    return res.status(500).send({ error: "Couldn't create admin" });
   }
 });
 // creates user doctor
-UserRouter.post("/doctor", async (req: Request, res: Response) => {
-  const { displayName,email,password,role } = req.body;
-
-  if (role !== "doctor") {
-    return res.status(400).send({
-      Error: "Invalid Role"
-    })
-  }
-  try {
-    const newUserId = await createUserFB(displayName,email, password,role, false );
-    res.statusCode = 201;
-    res.send({
-    id: newUserId,
-    message: "Doctor user created"
-  });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
-  }
-});
-//lists users
-UserRouter.get("/:uid?",
+UserRouter.post("/doctor",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
-   allowSameUser:true}), 
+   allowSameUser:false}), async (req: Request, res: Response) => {
+  const { displayName,email,password } = req.body;
+  try {
+    const newUserId = await createUserFB(displayName,email, password,"doctor", false );
+    res.statusCode = 201;
+    res.send(newUserId);
+  } catch (error) {
+    return res.status(500).send({ error: "Couldn't create doctor" });
+  }
+});
+//lists users
+UserRouter.get("/:userId?",
+
   async (req: Request, res: Response) => {
-    const { uid } = req.params;
+    const { userId } = req.params;
     try {
-      if(uid === null || uid === undefined){
+      if(userId === null || userId === undefined){
         const users = await getAllUsers();
         res.status(200).send(users);
       }
       else{
-        const users = await readUser(uid ? uid:"");
+        const users = await readUser(userId ? userId:"");
         res.status(200).send(users);
       }
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: "something went wrong" });
+      res.status(500).send({ error: "Couldnt get user" });
     }
   }
 );
@@ -101,7 +92,7 @@ hasRole(
     message: "User state updated"
   });
   } catch (error) {
-    console.log(error);
+    return res.status(500).send({ error: "Couldn't disable user" });
   }
 });
 

@@ -9,34 +9,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readDoctors = exports.createDoctor = void 0;
+exports.readDoctor = exports.readDoctors = exports.createDoctor = void 0;
 const doctor_1 = require("../models/doctor");
-const createDoctor = (medicalSpeciality, userId) => __awaiter(void 0, void 0, void 0, function* () {
+const createDoctor = (firstName, lastName, medicalSpeciality, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const newDoctor = yield doctor_1.doctor.create({
-            medicalSpeciality, userId
+        const newDoctor = yield doctor_1.doctor.create({ firstName, lastName,
+            medicalSpeciality,
+            userId,
         });
-        console.log("Doctor created with id= " + newDoctor.id);
-        return newDoctor.id;
+        return newDoctor;
     }
     catch (error) {
-        console.error(error);
+        throw new Error("Can't create doctor");
     }
 });
 exports.createDoctor = createDoctor;
-const readDoctors = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const readDoctors = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (id) {
-            const readDoctor = yield doctor_1.doctor.findByPk(id);
-            return readDoctor;
-        }
-        else {
-            const readDoctor = yield doctor_1.doctor.findAll();
-            return readDoctor;
-        }
+        const readDoctor = yield doctor_1.doctor.findAll();
+        return readDoctor;
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Can't read Doctors");
     }
 });
 exports.readDoctors = readDoctors;
+const readDoctor = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const readDoctor = yield doctor_1.doctor.findOne({ where: { userId } });
+        return readDoctor;
+    }
+    catch (error) {
+        throw new Error("Can't read Doctor");
+    }
+});
+exports.readDoctor = readDoctor;

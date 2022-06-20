@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createDoctor,readDoctors } from "../repository/doctor.models.repo";
+import { createDoctor,readDoctors, readDoctor } from "../repository/doctor.models.repo";
 import { hasRole } from "../middlewares/hasRoles";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
@@ -12,29 +12,35 @@ hasRole(
   {roles: ["admin"],
    allowSameUser: false}), 
    async (req: Request, res: Response) => {
-  const { medicalSpeciality, userId } = req.body;
+  const { firstName, lastName,medicalSpeciality, userId } = req.body;
   try {
-    const newDoctorId = await createDoctor(medicalSpeciality, userId);
+    const newDoctorId = await createDoctor(firstName, lastName,medicalSpeciality, userId);
     res.statusCode = 201;
-    res.send({
-      id: newDoctorId,
-      messages: "User doctor created with ID= " + newDoctorId
-    });
+    res.send(newDoctorId);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ error: "Can't create doctor" });
   }
 });
 
 //shows list of doctors
-DoctorRouter.get("/",
+DoctorRouter.get("/:userId?",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser: false}),  async (req: Request, res: Response) => {
-  const readDoctor = await readDoctors(req.body.id)
-  res.statusCode = 200;
-  res.json({
-    id: readDoctor,
-    messages: "Registered doctors:"
-  });
+  const { userId } = req.params;
+  try {
+    if(userId === null || userId === undefined)
+  {
+    const listDoctors = await readDoctors()
+    res.status(200).send(listDoctors);
+  }
+  else{
+    const doctor = await readDoctor(userId? userId:"")
+    res.status(200).send(doctor);
+  }
+  } catch (error) {
+    res.status(500).send({ error: "Can't read Doctors" });
+  }
 });
+

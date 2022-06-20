@@ -12,6 +12,14 @@ const initPatientModel = (sequelize) => {
             autoIncrement: true,
             primaryKey: true,
         },
+        firstName: {
+            type: new sequelize_1.DataTypes.STRING(100),
+            allowNull: false
+        },
+        lastName: {
+            type: new sequelize_1.DataTypes.STRING(100),
+            allowNull: false
+        },
         birth: {
             type: sequelize_1.DataTypes.STRING(100),
             allowNull: false

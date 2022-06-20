@@ -9,18 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAppointment = exports.updatesTime = exports.deleteAppointments = exports.findAppointment = exports.listAllAppointments = exports.listAppointmentsDoctor = exports.readAppointmentsDoctor = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
+exports.updateAppointment = exports.deleteAppointments = exports.findAppointment = exports.listAllAppointments = exports.listAppointmentsDoctor = exports.readAppointmentsDoctor = exports.listAppointmentsPatient = exports.readAppointmentsPatient = exports.readAppointments = exports.createAppointments = void 0;
 const appointment_1 = require("../models/appointment");
 const createAppointments = (appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const createAppointment = yield appointment_1.appointment.create({
             appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId
         });
-        console.log("Appointment created with id= " + createAppointment.id);
-        return createAppointment.id;
+        return createAppointment;
     }
     catch (error) {
-        console.error(error);
+        throw new Error("Something Wrong");
     }
 });
 exports.createAppointments = createAppointments;
@@ -30,7 +29,7 @@ const readAppointments = (limit, offset) => __awaiter(void 0, void 0, void 0, fu
         return readAppointment;
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Something Wrong");
     }
 });
 exports.readAppointments = readAppointments;
@@ -46,7 +45,7 @@ const readAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0,
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Something Wrong");
     }
 });
 exports.readAppointmentsPatient = readAppointmentsPatient;
@@ -62,7 +61,7 @@ const listAppointmentsPatient = (patientId, limit, offset) => __awaiter(void 0, 
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't find patient appointments");
     }
 });
 exports.listAppointmentsPatient = listAppointmentsPatient;
@@ -78,7 +77,7 @@ const readAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, f
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't read doctor appointment");
     }
 });
 exports.readAppointmentsDoctor = readAppointmentsDoctor;
@@ -103,7 +102,7 @@ const listAppointmentsDoctor = (id, queryParams, order, orderBy) => __awaiter(vo
         return listAppointments;
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't find doctor appointments");
     }
 });
 exports.listAppointmentsDoctor = listAppointmentsDoctor;
@@ -129,7 +128,7 @@ const listAllAppointments = (queryParams, orderBy, order, limit, offset) => __aw
         return listAppointments;
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't find appointments");
     }
 });
 exports.listAllAppointments = listAllAppointments;
@@ -144,7 +143,7 @@ const findAppointment = (id) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't find appointment");
     }
 });
 exports.findAppointment = findAppointment;
@@ -161,33 +160,16 @@ const deleteAppointments = (id) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't delete appointment");
     }
 });
 exports.deleteAppointments = deleteAppointments;
-const updatesTime = (id, appointmentTime, appointmentDate) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const validator = yield appointment_1.appointment.findByPk(id);
-        if (id === (validator === null || validator === void 0 ? void 0 : validator.id)) {
-            const updateTime = yield appointment_1.appointment.update({ appointmentTime: appointmentTime, appointmentDate: appointmentDate }, { where: { id } });
-            console.log("time updated" + id);
-            return updateTime;
-        }
-        else {
-            return "Invalid id";
-        }
-    }
-    catch (error) {
-        console.log(error);
-    }
-});
-exports.updatesTime = updatesTime;
 const updateAppointment = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield appointment_1.appointment.update(payload, { where: { id } });
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't update appointment");
     }
 });
 exports.updateAppointment = updateAppointment;

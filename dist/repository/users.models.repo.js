@@ -9,28 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.disableUsers = exports.readUsers = exports.createUser = void 0;
+exports.disableUsers = exports.readUsers = void 0;
 const user_1 = require("../models/user");
-const createUser = (firstName, lastName, password, email, is_active, roleId) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const newUser = yield user_1.user.create({
-            firstName, lastName, password, email, is_active, roleId
-        });
-        console.log("User created with id= " + newUser.id);
-        return newUser.id;
-    }
-    catch (error) {
-        console.error(error);
-    }
-});
-exports.createUser = createUser;
 const readUsers = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const readUser = yield user_1.user.findAll();
         return readUser;
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't read user");
     }
 });
 exports.readUsers = readUsers;
@@ -47,7 +34,7 @@ const disableUsers = (id) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't disable user");
     }
 });
 exports.disableUsers = disableUsers;

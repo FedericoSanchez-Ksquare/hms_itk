@@ -18,18 +18,13 @@ exports.AppointmentRouter = (0, express_1.Router)();
 //creates appointments
 exports.AppointmentRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId } = req.body;
+    const { appointmentDate, appointmentDetails, appointmentTime, patientId, doctorId } = req.body;
     try {
-        const newAppointmentId = yield (0, appointments_models_repo_1.createAppointments)(appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId);
-        res.statusCode = 201;
-        res.send({
-            id: newAppointmentId,
-            message: "Appointment created with ID= " + newAppointmentId
-        });
+        const newAppointment = yield (0, appointments_models_repo_1.createAppointments)(appointmentDate, appointmentDetails, appointmentTime, false, patientId, doctorId);
+        res.status(201).send(newAppointment);
     }
     catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
+        return res.status(500).send({ error: "Couldn't create appointments" });
     }
 }));
 //list patient appointments
@@ -51,8 +46,7 @@ exports.AppointmentRouter.get("/patients/:patientId", isAuthenticated_1.isAuthen
         }
     }
     catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
+        return res.status(500).send({ error: "Couldn't find patient appointments" });
     }
 }));
 //list doctors appointments
@@ -75,8 +69,7 @@ exports.AppointmentRouter.get("/doctors/:doctorId", isAuthenticated_1.isAuthenti
         });
     }
     catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
+        return res.status(500).send({ error: "Couldn't find doctor appointments" });
     }
 }));
 //shows all appointments or filter appointments
@@ -96,8 +89,7 @@ exports.AppointmentRouter.get("/all", isAuthenticated_1.isAuthenticated, (0, has
         res.send(readAppointment);
     }
     catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
+        return res.status(500).send({ error: "Couldn't find appointments" });
     }
 }));
 exports.AppointmentRouter.get("/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
@@ -117,7 +109,7 @@ exports.AppointmentRouter.get("/:id", isAuthenticated_1.isAuthenticated, (0, has
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Couldn't get user");
     }
 }));
 // updates appointments
@@ -132,7 +124,6 @@ exports.AppointmentRouter.patch("/:id", isAuthenticated_1.isAuthenticated, (0, h
         res.send(deleted);
     }
     catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
+        return res.status(500).send({ error: "Couldn't update appointment" });
     }
 }));

@@ -50,7 +50,7 @@ export const readUser = async (uid?: any) => {
 };
 
 export const getAllUsers = async () => {
-  const listAllMyUsers = await admin.auth().listUsers(10);
+  const listAllMyUsers = await admin.auth().listUsers(5);
   const users = listAllMyUsers.users.map(mapToUser);
 
   return users;

@@ -19,17 +19,12 @@ hasRole(
   {roles: ["admin"],
    allowSameUser:true}), 
   async (req: Request, res: Response) => {
-  const { appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId } = req.body;
+  const { appointmentDate, appointmentDetails,appointmentTime,patientId,doctorId } = req.body;
   try {
-    const newAppointmentId = await createAppointments(appointmentDate, appointmentDetails,appointmentTime, is_deleted,patientId,doctorId);
-    res.statusCode = 201;
-    res.send({
-      id: newAppointmentId,
-      message: "Appointment created with ID= " + newAppointmentId
-    });
+    const newAppointment = await createAppointments(appointmentDate, appointmentDetails,appointmentTime, false,patientId,doctorId);
+    res.status(201).send(newAppointment);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
+    return res.status(500).send({ error: "Couldn't create appointments" });
   }
 });
 
@@ -55,8 +50,7 @@ hasRole(
       res.send(listAppointment);
     }
   } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
+    return res.status(500).send({ error: "Couldn't find patient appointments" });
   }
 });
 
@@ -83,8 +77,7 @@ hasRole(
       message: "Appointments for doctor with ID= " +doctorId
     });
   } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
+    return res.status(500).send({ error: "Couldn't find doctor appointments" });
   }
 });
 //shows all appointments or filter appointments
@@ -107,8 +100,7 @@ hasRole(
       res.statusCode = 200;
       res.send(readAppointment);
     } catch (error) {
-      console.log(error);
-      return res.status(500).send({ error: "something went wrong" });
+      return res.status(500).send({ error: "Couldn't find appointments" });
     }
 });
 
@@ -134,8 +126,7 @@ isAuthenticated,hasRole(
     }
 
   } catch (error) {
-    console.log(error);
-    
+    throw new Error("Couldn't get user");
   }
   
  });
@@ -155,8 +146,7 @@ async (req: Request, res: Response)=>{
     res.statusCode = 200;
     res.send(deleted);
   } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "something went wrong" });
+    return res.status(500).send({ error: "Couldn't update appointment" });
   }
 });
 

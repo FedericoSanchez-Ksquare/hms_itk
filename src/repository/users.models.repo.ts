@@ -1,16 +1,5 @@
 import { user } from "../models/user";
 
-export const createUser = async (firstName: string, lastName: string, password: string, email: string,is_active:boolean, roleId: number ) => {
-  try {
-    const newUser = await user.create({
-      firstName, lastName, password,email,is_active, roleId
-    });
-    console.log("User created with id= "+newUser.id);
-    return newUser.id;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 export const readUsers = async(
   uid: string
@@ -20,7 +9,7 @@ export const readUsers = async(
     return readUser
 
   } catch (error) {
-    console.log(error)
+    throw new Error("Couldn't read user");
   }
 }
 export const disableUsers = async(
@@ -36,7 +25,6 @@ export const disableUsers = async(
       return disablePatient
     }
   } catch (error) {
-    console.log(error);
-    
+    throw new Error("Couldn't disable user"); 
   }
 }

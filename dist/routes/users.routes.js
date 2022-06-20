@@ -19,73 +19,63 @@ exports.UserRouter = (0, express_1.Router)();
 exports.UserRouter.post("/patient", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { displayName, email, password } = req.body;
     try {
-        const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, "patient", false);
-        res.statusCode = 201;
-        res.send(newUserId);
+        if (!email || !password) {
+            res.statusCode = 400;
+            res.send({
+                message: "Missing fields"
+            });
+        }
+        else {
+            const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, "patient", false);
+            res.statusCode = 201;
+            res.send(newUserId);
+        }
     }
     catch (error) {
-        console.log(error);
+        return res.status(500).send({ error: "Couldn't create patient" });
     }
 }));
 //creates user admin
 exports.UserRouter.post("/admin", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: [""],
     allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { displayName, email, password, role } = req.body;
-    if (role !== "admin") {
-        return res.status(400).send({
-            Error: "Invalid Role"
-        });
-    }
+    const { displayName, email, password } = req.body;
     try {
-        const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, role, false);
+        const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, "admin", false);
         res.statusCode = 201;
-        res.send({
-            id: newUserId,
-            message: "Admin user created"
-        });
+        res.send(newUserId);
     }
     catch (error) {
-        console.log(error);
+        return res.status(500).send({ error: "Couldn't create admin" });
     }
 }));
 // creates user doctor
-exports.UserRouter.post("/doctor", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { displayName, email, password, role } = req.body;
-    if (role !== "doctor") {
-        return res.status(400).send({
-            Error: "Invalid Role"
-        });
-    }
+exports.UserRouter.post("/doctor", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { displayName, email, password } = req.body;
     try {
-        const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, role, false);
+        const newUserId = yield (0, methods_1.createUserFB)(displayName, email, password, "doctor", false);
         res.statusCode = 201;
-        res.send({
-            id: newUserId,
-            message: "Doctor user created"
-        });
+        res.send(newUserId);
     }
     catch (error) {
-        console.log(error);
-        return res.status(500).send({ error: "something went wrong" });
+        return res.status(500).send({ error: "Couldn't create doctor" });
     }
 }));
 //lists users
-exports.UserRouter.get("/:uid?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
-    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { uid } = req.params;
+exports.UserRouter.get("/:userId?", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
     try {
-        if (uid === null || uid === undefined) {
+        if (userId === null || userId === undefined) {
             const users = yield (0, methods_1.getAllUsers)();
             res.status(200).send(users);
         }
         else {
-            const users = yield (0, methods_1.readUser)(uid ? uid : "");
+            const users = yield (0, methods_1.readUser)(userId ? userId : "");
             res.status(200).send(users);
         }
     }
     catch (error) {
-        console.error(error);
-        res.status(500).send({ error: "something went wrong" });
+        res.status(500).send({ error: "Couldnt get user" });
     }
 }));
 //enable disables users
@@ -101,6 +91,6 @@ exports.UserRouter.delete("/:userId", isAuthenticated_1.isAuthenticated, (0, has
         });
     }
     catch (error) {
-        console.log(error);
+        return res.status(500).send({ error: "Couldn't disable user" });
     }
 }));

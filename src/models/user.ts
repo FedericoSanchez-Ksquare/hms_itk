@@ -4,8 +4,7 @@ export class user extends Model <InferAttributes<user>,
 InferCreationAttributes<user>
 >{
     declare id: CreationOptional<number>;
-    declare firstName: string;
-    declare lastName: string;
+    
     declare password: string;
     declare email: string;
     declare is_active: boolean;
@@ -19,14 +18,6 @@ export const initUserModel = (sequelize: Sequelize) =>{
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        },
-        firstName:{
-            type: new DataTypes.STRING(100),
-            allowNull: false
-        },
-        lastName:{
-            type: new DataTypes.STRING(100),
-            allowNull: false
         },
         password:{
             type: new DataTypes.STRING(100),

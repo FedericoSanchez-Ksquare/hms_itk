@@ -2,6 +2,8 @@ import {Model,InferAttributes, InferCreationAttributes, CreationOptional, DataTy
 
 export class doctor extends Model <InferAttributes<doctor>,InferCreationAttributes<doctor>>{
     declare id: CreationOptional<number>;
+    declare firstName: string;
+    declare lastName: string;
     declare medicalSpeciality: string;
     declare userId: string;
 }
@@ -13,6 +15,14 @@ export const initDoctorModel = (sequelize: Sequelize) =>{
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+        },
+        firstName:{
+            type: new DataTypes.STRING(100),
+            allowNull: false
+        },
+        lastName:{
+            type: new DataTypes.STRING(100),
+            allowNull: false
         },
         medicalSpeciality:{
             type: DataTypes.STRING(100),

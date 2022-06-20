@@ -9,34 +9,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readPatients = exports.createPatient = void 0;
+exports.readPatient = exports.readPatients = exports.createPatient = void 0;
 const patient_1 = require("../models/patient");
-const createPatient = (birth, weigth, height, gender, address, userId) => __awaiter(void 0, void 0, void 0, function* () {
+const createPatient = (firstName, lastName, birth, weigth, height, gender, address, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const newPatient = yield patient_1.patient.create({
+        const newPatient = yield patient_1.patient.create({ firstName, lastName,
             birth, weigth, height, gender, address, userId
         });
-        console.log("Patient created with id= " + newPatient.id);
-        return newPatient.id;
+        return newPatient;
     }
     catch (error) {
-        console.error(error);
+        throw new Error("Can't create patient");
     }
 });
 exports.createPatient = createPatient;
-const readPatients = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const readPatients = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (id) {
-            const readPatient = yield patient_1.patient.findByPk(id);
-            return readPatient;
-        }
-        else {
-            const readPatient = yield patient_1.patient.findAll();
-            return readPatient;
-        }
+        const readPatient = yield patient_1.patient.findAll();
+        return readPatient;
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Can't read patients");
     }
 });
 exports.readPatients = readPatients;
+const readPatient = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const readPatient = yield patient_1.patient.findOne({ where: { userId } });
+        return readPatient;
+    }
+    catch (error) {
+        throw new Error("Can't read patient");
+    }
+});
+exports.readPatient = readPatient;

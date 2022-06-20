@@ -18,26 +18,31 @@ exports.DoctorRouter = (0, express_1.Router)();
 //creates doctor
 exports.DoctorRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { medicalSpeciality, userId } = req.body;
+    const { firstName, lastName, medicalSpeciality, userId } = req.body;
     try {
-        const newDoctorId = yield (0, doctor_models_repo_1.createDoctor)(medicalSpeciality, userId);
+        const newDoctorId = yield (0, doctor_models_repo_1.createDoctor)(firstName, lastName, medicalSpeciality, userId);
         res.statusCode = 201;
-        res.send({
-            id: newDoctorId,
-            messages: "User doctor created with ID= " + newDoctorId
-        });
+        res.send(newDoctorId);
     }
     catch (error) {
-        console.log(error);
+        res.status(500).send({ error: "Can't create doctor" });
     }
 }));
 //shows list of doctors
-exports.DoctorRouter.get("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.DoctorRouter.get("/:userId?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const readDoctor = yield (0, doctor_models_repo_1.readDoctors)(req.body.id);
-    res.statusCode = 200;
-    res.json({
-        id: readDoctor,
-        messages: "Registered doctors:"
-    });
+    const { userId } = req.params;
+    try {
+        if (userId === null || userId === undefined) {
+            const listDoctors = yield (0, doctor_models_repo_1.readDoctors)();
+            res.status(200).send(listDoctors);
+        }
+        else {
+            const doctor = yield (0, doctor_models_repo_1.readDoctor)(userId ? userId : "");
+            res.status(200).send(doctor);
+        }
+    }
+    catch (error) {
+        res.status(500).send({ error: "Can't read Doctors" });
+    }
 }));

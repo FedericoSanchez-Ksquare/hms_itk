@@ -7,10 +7,9 @@ export const createAppointments = async (appointmentDate: string, appointmentDet
     const createAppointment = await appointment.create({
       appointmentDate, appointmentDetails,appointmentTime ,is_deleted, patientId, doctorId
     });
-    console.log("Appointment created with id= "+createAppointment.id);
-    return createAppointment.id;
+    return createAppointment;
   } catch (error) {
-    console.error(error);
+    throw new Error("Something Wrong");
   }
 };
 
@@ -22,7 +21,7 @@ export const readAppointments = async(
     const readAppointment = await appointment.findAll({limit: limit, offset:offset});
     return readAppointment
   } catch (error) {
-    console.log(error)
+    throw new Error("Something Wrong");
   }
 }
 export const readAppointmentsPatient = async(
@@ -38,7 +37,7 @@ export const readAppointmentsPatient = async(
       return "Invalid id"
     }
   } catch (error) {
-    console.log(error)
+    throw new Error("Something Wrong");
   }
 }
 
@@ -58,7 +57,7 @@ export const listAppointmentsPatient = async(
     }
   
   } catch (error) {
-    console.log(error)
+    throw new Error("Couldn't find patient appointments");
   }
 }
 
@@ -74,7 +73,7 @@ export const readAppointmentsDoctor = async(
       return "Invalid id"
     }
   } catch (error) {
-    console.log(error)
+    throw new Error("Couldn't read doctor appointment");
   }
 }
 
@@ -104,7 +103,7 @@ export const listAppointmentsDoctor = async(
     const listAppointments = await appointment.findAll({order: [[orderBy, order ]],where});
     return listAppointments
   } catch (error) {
-    console.log(error)
+    throw new Error("Couldn't find doctor appointments");
   }
 }
 
@@ -135,7 +134,7 @@ export const listAllAppointments = async(
     const listAppointments = await appointment.findAll({order: [[orderBy, order ]],where, limit, offset});
     return listAppointments
   } catch (error) {
-    console.log(error)
+    throw new Error("Couldn't find appointments");
   }
 }
 
@@ -150,7 +149,7 @@ export const findAppointment = async(
       return "Invalid id"
     }
   } catch (error) {
-    console.log(error)
+    throw new Error("Couldn't find appointment");
   }
 }
 
@@ -169,34 +168,16 @@ export const deleteAppointments = async(
       return deleteAppointment
     }
   } catch (error) {
-    console.log(error);
-    
+    throw new Error("Couldn't delete appointment");
   }
 }
 
-export const updatesTime = async(
-  id: number, appointmentTime: string, appointmentDate: string
-) =>{
-  try {
-    const validator = await appointment.findByPk(id)
-    if(id === validator?.id){
-      const updateTime = await appointment.update({appointmentTime: appointmentTime, appointmentDate: appointmentDate }, {where:{id}})
-      console.log("time updated"+id);
-      return updateTime
-    }else{
-      return"Invalid id"
-    }
-  } catch (error) {
-    console.log(error);
-    
-  }
-}
 
 export const updateAppointment = async( id: number, payload: any) =>{
   try {
     await appointment.update(payload, {where:{id}})
   } catch (error) {
-    console.log(error)
+    throw new Error("Couldn't update appointment");
   }
 
 }

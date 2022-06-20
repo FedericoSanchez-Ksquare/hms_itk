@@ -77,7 +77,7 @@ const readAppointmentsDoctor = (doctorId) => __awaiter(void 0, void 0, void 0, f
         }
     }
     catch (error) {
-        throw new Error("Couldn't read doctor appointment");
+        console.error("Couldn't read doctor appointment");
     }
 });
 exports.readAppointmentsDoctor = readAppointmentsDoctor;

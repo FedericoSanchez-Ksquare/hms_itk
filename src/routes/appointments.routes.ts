@@ -126,7 +126,7 @@ isAuthenticated,hasRole(
     }
 
   } catch (error) {
-    throw new Error("Couldn't get user");
+    return res.status(500).send({ error: "Couldn't get user" });
   }
   
  });

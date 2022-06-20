@@ -109,7 +109,7 @@ exports.AppointmentRouter.get("/:id", isAuthenticated_1.isAuthenticated, (0, has
         }
     }
     catch (error) {
-        throw new Error("Couldn't get user");
+        return res.status(500).send({ error: "Couldn't get user" });
     }
 }));
 // updates appointments

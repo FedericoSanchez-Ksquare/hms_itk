@@ -73,7 +73,7 @@ export const readAppointmentsDoctor = async(
       return "Invalid id"
     }
   } catch (error) {
-    throw new Error("Couldn't read doctor appointment");
+    console.error("Couldn't read doctor appointment");
   }
 }
 

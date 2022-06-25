@@ -16,7 +16,7 @@ const createAppointments = (appointmentDate, appointmentDetails, appointmentTime
         const createAppointment = yield appointment_1.appointment.create({
             appointmentDate, appointmentDetails, appointmentTime, is_deleted, patientId, doctorId
         });
-        return createAppointment;
+        return [createAppointment];
     }
     catch (error) {
         throw new Error("Something Wrong");
@@ -49,11 +49,17 @@ const readAppointmentsPatient = (patientId) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.readAppointmentsPatient = readAppointmentsPatient;
-const listAppointmentsPatient = (patientId, limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
+const listAppointmentsPatient = (patientId, queryParams, limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const validation = yield appointment_1.appointment.findByPk(patientId);
+        let where = {
+            patientId
+        };
+        if (queryParams.is_deleted) {
+            where.is_deleted = queryParams.is_deleted;
+        }
         if (patientId === (validation === null || validation === void 0 ? void 0 : validation.patientId)) {
-            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ where: { patientId }, limit, offset });
+            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ order: ['id'], where, limit, offset });
             return readAllAppointmentsP;
         }
         else {

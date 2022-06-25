@@ -64,9 +64,10 @@ exports.UserRouter.post("/doctor", isAuthenticated_1.isAuthenticated, (0, hasRol
 //lists users
 exports.UserRouter.get("/:userId?", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
+    const { limit, offset } = req.query;
     try {
         if (userId === null || userId === undefined) {
-            const users = yield (0, methods_1.getAllUsers)();
+            const users = yield (0, methods_1.getAllUsers)(limit ? +limit : 5, offset ? +offset : 0);
             res.status(200).send(users);
         }
         else {

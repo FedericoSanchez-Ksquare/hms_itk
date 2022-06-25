@@ -61,9 +61,10 @@ UserRouter.get("/:userId?",
 
   async (req: Request, res: Response) => {
     const { userId } = req.params;
+    const {limit, offset} = req.query
     try {
       if(userId === null || userId === undefined){
-        const users = await getAllUsers();
+        const users = await getAllUsers(limit ? +limit : 5, offset ? +offset : 0);
         res.status(200).send(users);
       }
       else{

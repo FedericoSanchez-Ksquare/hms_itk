@@ -7,7 +7,7 @@ export const createAppointments = async (appointmentDate: string, appointmentDet
     const createAppointment = await appointment.create({
       appointmentDate, appointmentDetails,appointmentTime ,is_deleted, patientId, doctorId
     });
-    return createAppointment;
+    return [createAppointment];
   } catch (error) {
     throw new Error("Something Wrong");
   }
@@ -43,13 +43,21 @@ export const readAppointmentsPatient = async(
 
 export const listAppointmentsPatient = async(
   patientId: number,
+  queryParams: any,
   limit?: number,
   offset?: number
 ) => {
   try {
     const validation = await appointment.findByPk(patientId)
+    let where: any = {
+      patientId
+    }
+    if(queryParams.is_deleted){
+      where.is_deleted = queryParams.is_deleted
+    }
+
     if (patientId === validation?.patientId) {
-      const readAllAppointmentsP = await appointment.findAll({where: {patientId}, limit, offset});
+      const readAllAppointmentsP = await appointment.findAll({order: ['id'],where, limit, offset});
       return readAllAppointmentsP
     }
     else{

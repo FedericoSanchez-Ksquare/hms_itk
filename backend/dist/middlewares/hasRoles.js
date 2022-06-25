@@ -12,12 +12,12 @@ const hasRole = (options) => {
             return next();
         }
         if (!role) {
-            return res.status(403).send("hola");
+            return res.status(403).send("error");
         }
         if (options.roles.includes(role)) {
             return next();
         }
-        return res.status(403).send("hola2");
+        return res.status(403).send("error");
     };
 };
 exports.hasRole = hasRole;

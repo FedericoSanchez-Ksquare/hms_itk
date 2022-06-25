@@ -73,8 +73,8 @@ const readUser = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     return mapToUser(user);
 });
 exports.readUser = readUser;
-const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
-    const listAllMyUsers = yield admin.auth().listUsers(5);
+const getAllUsers = (limit, offset) => __awaiter(void 0, void 0, void 0, function* () {
+    const listAllMyUsers = yield admin.auth().listUsers();
     const users = listAllMyUsers.users.map(mapToUser);
     return users;
 });

@@ -13,7 +13,7 @@ import { isAuthenticated } from "../middlewares/isAuthenticated";
 export const AppointmentRouter = Router();
 
 //creates appointments
-AppointmentRouter.post("/",
+AppointmentRouter.post("/:userId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
@@ -29,16 +29,19 @@ hasRole(
 });
 
 //list patient appointments
-AppointmentRouter.get("/patients/:patientId",
+AppointmentRouter.get("/patients/:userId/:patientId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
    allowSameUser:true}), 
   async (req: Request, res: Response) => {
   const { patientId } = req.params;
-  const {limit, offset} = req.query
+  const {limit, offset, is_deleted} = req.query
+  let queryParams = {
+    is_deleted
+  }
   try {
-    const listAppointment = await listAppointmentsPatient(+patientId, limit ? +limit : 10, offset ? +offset : 0)
+    const listAppointment = await listAppointmentsPatient(+patientId, queryParams, limit ? +limit : 100, offset ? +offset : 0)
     if(listAppointment === "Invalid id")
     {
       res.statusCode = 400;
@@ -55,7 +58,7 @@ hasRole(
 });
 
 //list doctors appointments
-AppointmentRouter.get("/doctors/:doctorId",
+AppointmentRouter.get("/doctors/:userId/:doctorId",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
@@ -72,10 +75,7 @@ hasRole(
   try {
     const listAppointmentsDoctors = await listAppointmentsDoctor(+doctorId, queryParams, order ? order: "ASC", orderBy ? orderBy: "id" )
     res.statusCode = 200;
-    res.json({
-      id: listAppointmentsDoctors,
-      message: "Appointments for doctor with ID= " +doctorId
-    });
+    res.json( listAppointmentsDoctors);
   } catch (error) {
     return res.status(500).send({ error: "Couldn't find doctor appointments" });
   }
@@ -96,7 +96,7 @@ hasRole(
     doctorId
   }
     try {
-      const readAppointment = await listAllAppointments(queryParams,orderBy ? orderBy: "id", order ? order: "ASC", limit ? +limit : 10, offset ? +offset : 0 )
+      const readAppointment = await listAllAppointments(queryParams,orderBy ? orderBy: "id", order ? order: "ASC", limit ? +limit : 100, offset ? +offset : 0 )
       res.statusCode = 200;
       res.send(readAppointment);
     } catch (error) {
@@ -104,13 +104,12 @@ hasRole(
     }
 });
 
-AppointmentRouter.get("/:id",
+AppointmentRouter.get("/:userId/:id",
 isAuthenticated,hasRole(
   {roles: ["admin"],
   allowSameUser:true}),
  async (req:Request, res: Response) => {
   const {id} = req.params
-
   try {
     const readAppointment = await findAppointment(+id)
     if(readAppointment === "Invalid id")
@@ -126,16 +125,16 @@ isAuthenticated,hasRole(
     }
 
   } catch (error) {
-    return res.status(500).send({ error: "Couldn't get user" });
+    return res.status(500).send({ error: "Couldn't get appointment" });
   }
   
  });
 
 // updates appointments
-AppointmentRouter.patch("/:id",
+AppointmentRouter.patch("/:userId/:id",
 isAuthenticated,
 hasRole(
-  {roles: ["admin"],
+  {roles: ["admin","doctor"],
    allowSameUser:true}), 
 async (req: Request, res: Response)=>{
   const {id} = req.params;

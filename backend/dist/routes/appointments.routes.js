@@ -16,7 +16,7 @@ const hasRoles_1 = require("../middlewares/hasRoles");
 const isAuthenticated_1 = require("../middlewares/isAuthenticated");
 exports.AppointmentRouter = (0, express_1.Router)();
 //creates appointments
-exports.AppointmentRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.AppointmentRouter.post("/:userId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { appointmentDate, appointmentDetails, appointmentTime, patientId, doctorId } = req.body;
     try {
@@ -28,12 +28,15 @@ exports.AppointmentRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRo
     }
 }));
 //list patient appointments
-exports.AppointmentRouter.get("/patients/:patientId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.AppointmentRouter.get("/patients/:userId/:patientId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { patientId } = req.params;
-    const { limit, offset } = req.query;
+    const { limit, offset, is_deleted } = req.query;
+    let queryParams = {
+        is_deleted
+    };
     try {
-        const listAppointment = yield (0, appointments_models_repo_1.listAppointmentsPatient)(+patientId, limit ? +limit : 10, offset ? +offset : 0);
+        const listAppointment = yield (0, appointments_models_repo_1.listAppointmentsPatient)(+patientId, queryParams, limit ? +limit : 100, offset ? +offset : 0);
         if (listAppointment === "Invalid id") {
             res.statusCode = 400;
             res.json({
@@ -50,7 +53,7 @@ exports.AppointmentRouter.get("/patients/:patientId", isAuthenticated_1.isAuthen
     }
 }));
 //list doctors appointments
-exports.AppointmentRouter.get("/doctors/:doctorId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.AppointmentRouter.get("/doctors/:userId/:doctorId", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { doctorId } = req.params;
     const { orderBy, order, appointmentDate, appointmentTime, is_deleted, patientId } = req.query;
@@ -63,10 +66,7 @@ exports.AppointmentRouter.get("/doctors/:doctorId", isAuthenticated_1.isAuthenti
     try {
         const listAppointmentsDoctors = yield (0, appointments_models_repo_1.listAppointmentsDoctor)(+doctorId, queryParams, order ? order : "ASC", orderBy ? orderBy : "id");
         res.statusCode = 200;
-        res.json({
-            id: listAppointmentsDoctors,
-            message: "Appointments for doctor with ID= " + doctorId
-        });
+        res.json(listAppointmentsDoctors);
     }
     catch (error) {
         return res.status(500).send({ error: "Couldn't find doctor appointments" });
@@ -84,7 +84,7 @@ exports.AppointmentRouter.get("/all", isAuthenticated_1.isAuthenticated, (0, has
         doctorId
     };
     try {
-        const readAppointment = yield (0, appointments_models_repo_1.listAllAppointments)(queryParams, orderBy ? orderBy : "id", order ? order : "ASC", limit ? +limit : 10, offset ? +offset : 0);
+        const readAppointment = yield (0, appointments_models_repo_1.listAllAppointments)(queryParams, orderBy ? orderBy : "id", order ? order : "ASC", limit ? +limit : 100, offset ? +offset : 0);
         res.statusCode = 200;
         res.send(readAppointment);
     }
@@ -92,7 +92,7 @@ exports.AppointmentRouter.get("/all", isAuthenticated_1.isAuthenticated, (0, has
         return res.status(500).send({ error: "Couldn't find appointments" });
     }
 }));
-exports.AppointmentRouter.get("/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.AppointmentRouter.get("/:userId/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -109,11 +109,11 @@ exports.AppointmentRouter.get("/:id", isAuthenticated_1.isAuthenticated, (0, has
         }
     }
     catch (error) {
-        return res.status(500).send({ error: "Couldn't get user" });
+        return res.status(500).send({ error: "Couldn't get appointment" });
     }
 }));
 // updates appointments
-exports.AppointmentRouter.patch("/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.AppointmentRouter.patch("/:userId/:id", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin", "doctor"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { is_deleted, appointmentDate, appointmentTime } = req.body;

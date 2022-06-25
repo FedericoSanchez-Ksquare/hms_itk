@@ -47,7 +47,7 @@ export const isAuthenticated = async (
 
     return next();
   } catch (error) {
-    console.error(error);
+    
     res.statusCode = 401;
     return res.send({
       error: "No auth",

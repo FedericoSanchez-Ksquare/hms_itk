@@ -29,8 +29,8 @@ exports.DoctorRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1
     }
 }));
 //shows list of doctors
-exports.DoctorRouter.get("/:userId?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
-    allowSameUser: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.DoctorRouter.get("/list/:userId?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+    allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     try {
         if (userId === null || userId === undefined) {
@@ -41,6 +41,15 @@ exports.DoctorRouter.get("/:userId?", isAuthenticated_1.isAuthenticated, (0, has
             const doctor = yield (0, doctor_models_repo_1.readDoctor)(userId ? userId : "");
             res.status(200).send(doctor);
         }
+    }
+    catch (error) {
+        res.status(500).send({ error: "Can't read Doctors" });
+    }
+}));
+exports.DoctorRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const listDoctors = yield (0, doctor_models_repo_1.readDoctors)();
+        res.status(200).send(listDoctors);
     }
     catch (error) {
         res.status(500).send({ error: "Can't read Doctors" });

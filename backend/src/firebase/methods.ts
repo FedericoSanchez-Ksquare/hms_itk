@@ -49,8 +49,8 @@ export const readUser = async (uid?: any) => {
   return mapToUser(user);
 };
 
-export const getAllUsers = async () => {
-  const listAllMyUsers = await admin.auth().listUsers(5);
+export const getAllUsers = async (limit?: number, offset?:number) => {
+  const listAllMyUsers = await admin.auth().listUsers();
   const users = listAllMyUsers.users.map(mapToUser);
 
   return users;

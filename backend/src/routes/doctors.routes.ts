@@ -23,11 +23,11 @@ hasRole(
 });
 
 //shows list of doctors
-DoctorRouter.get("/:userId?",
+DoctorRouter.get("/list/:userId?",
 isAuthenticated,
 hasRole(
   {roles: ["admin"],
-   allowSameUser: false}),  async (req: Request, res: Response) => {
+   allowSameUser: true}),  async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {
     if(userId === null || userId === undefined)
@@ -39,6 +39,17 @@ hasRole(
     const doctor = await readDoctor(userId? userId:"")
     res.status(200).send(doctor);
   }
+  } catch (error) {
+    res.status(500).send({ error: "Can't read Doctors" });
+  }
+});
+
+DoctorRouter.get("/",
+  async (req: Request, res: Response) => {
+  try {
+    const listDoctors = await readDoctors()
+    res.status(200).send(listDoctors);
+
   } catch (error) {
     res.status(500).send({ error: "Can't read Doctors" });
   }

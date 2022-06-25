@@ -32,6 +32,7 @@ PatientRouter.get("/:userId?",
       res.status(200).send(patient);
     }
   } catch (error) {
+
     return res.status(500).send({ error: "Couldn't get patients" });
   }
 });

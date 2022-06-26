@@ -28,7 +28,7 @@ exports.PatientRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, 
     }
 }));
 // lists the patients
-exports.PatientRouter.get("/:userId?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.PatientRouter.get("/:userId?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin", "doctor"], allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     try {
         if (userId === null || userId === undefined) {

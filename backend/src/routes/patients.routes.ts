@@ -20,7 +20,7 @@ PatientRouter.post("/",
 // lists the patients
 PatientRouter.get("/:userId?",
   isAuthenticated,
-  hasRole({ roles: ["admin"], allowSameUser: true }), 
+  hasRole({ roles: ["admin", "doctor"], allowSameUser: true }), 
   async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {

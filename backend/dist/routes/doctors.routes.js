@@ -29,7 +29,7 @@ exports.DoctorRouter.post("/", isAuthenticated_1.isAuthenticated, (0, hasRoles_1
     }
 }));
 //shows list of doctors
-exports.DoctorRouter.get("/list/:userId?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin"],
+exports.DoctorRouter.get("/list/:userId?", isAuthenticated_1.isAuthenticated, (0, hasRoles_1.hasRole)({ roles: ["admin", "patient"],
     allowSameUser: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     try {

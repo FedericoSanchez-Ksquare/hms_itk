@@ -26,7 +26,7 @@ hasRole(
 DoctorRouter.get("/list/:userId?",
 isAuthenticated,
 hasRole(
-  {roles: ["admin"],
+  {roles: ["admin","patient"],
    allowSameUser: true}),  async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {

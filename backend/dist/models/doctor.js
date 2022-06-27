@@ -25,7 +25,7 @@ const initDoctorModel = (sequelize) => {
             allowNull: false
         },
         userId: {
-            type: sequelize_1.DataTypes.STRING(100)
+            type: sequelize_1.DataTypes.STRING(100),
         }
     }, {
         tableName: 'doctor',

@@ -37,16 +37,8 @@ exports.AppointmentRouter.get("/patients/:userId/:patientId", isAuthenticated_1.
     };
     try {
         const listAppointment = yield (0, appointments_models_repo_1.listAppointmentsPatient)(+patientId, queryParams, limit ? +limit : 100, offset ? +offset : 0);
-        if (listAppointment === "Invalid id") {
-            res.statusCode = 400;
-            res.json({
-                message: listAppointment
-            });
-        }
-        else {
-            res.statusCode = 200;
-            res.send(listAppointment);
-        }
+        res.statusCode = 200;
+        res.send(listAppointment);
     }
     catch (error) {
         return res.status(500).send({ error: "Couldn't find patient appointments" });

@@ -42,16 +42,10 @@ hasRole(
   }
   try {
     const listAppointment = await listAppointmentsPatient(+patientId, queryParams, limit ? +limit : 100, offset ? +offset : 0)
-    if(listAppointment === "Invalid id")
-    {
-      res.statusCode = 400;
-      res.json({
-        message: listAppointment
-      })
-    }else{
+    
       res.statusCode = 200;
       res.send(listAppointment);
-    }
+    
   } catch (error) {
     return res.status(500).send({ error: "Couldn't find patient appointments" });
   }

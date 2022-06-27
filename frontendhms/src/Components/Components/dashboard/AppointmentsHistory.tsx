@@ -10,14 +10,8 @@ import {
   enableAppointment,
 } from "../../slices/appointmentsSlice";
 import Sidebar, { RoleAuth } from "../Sidebar";
-import { authStatus } from "../../slices/authSlice";
-import {
-  showDoctors,
-} from "../../slices/doctorSlice";
-import {
-  fetchAllPatients,
-  patientStatus, readPatient, showPatients,
-} from "../../slices/patientSlice";
+import { showDoctors } from "../../slices/doctorSlice";
+import { fetchAllPatients, showPatients } from "../../slices/patientSlice";
 import { useForm } from "react-hook-form";
 
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -35,7 +29,7 @@ const AppointmentsHistory = () => {
 
   useEffect(() => {
     if (roleUser === "admin") {
-      dispatch(fetchAllPatients())
+      dispatch(fetchAllPatients());
       dispatch(fetchAllAppointments("is_deleted=true"));
     }
   }, [roleUser, dispatch]);
@@ -47,16 +41,13 @@ const AppointmentsHistory = () => {
 
   useEffect(() => {
     if (roleUser === "doctor") {
-      dispatch(fetchAllPatients())
+      dispatch(fetchAllPatients());
       dispatch(fetchDoctorAppointments("is_deleted=true"));
     }
   }, [roleUser, dispatch]);
 
-
-
   let doctors = useAppSelector(showDoctors);
-   let patients = useAppSelector(showPatients);
-
+  let patients = useAppSelector(showPatients);
 
   const columns: GridColDef[] = [
     {
@@ -65,7 +56,7 @@ const AppointmentsHistory = () => {
       flex: 1,
       editable: false,
       sortable: false,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       field: "date",
@@ -73,7 +64,7 @@ const AppointmentsHistory = () => {
       flex: 1,
       sortable: false,
       editable: false,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       field: "time",
@@ -81,7 +72,7 @@ const AppointmentsHistory = () => {
       flex: 1,
       sortable: false,
       editable: false,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       field: "active",
@@ -95,7 +86,7 @@ const AppointmentsHistory = () => {
 
   const appointment = useAppSelector(selectAppointments);
 
- let list: any;
+  let list: any;
 
   if (roleUser === "doctor") {
     list = appointment.map((value) => ({
@@ -116,45 +107,42 @@ const AppointmentsHistory = () => {
       },
       {
         field: "info",
-      headerName: "Update Info",
-      flex: 1,
-      sortable: false,
-      editable: false,
-      minWidth: 100,
-      renderCell: (cellValues) => {
-        return (
-          <Link to={`/readAppointment/${cellValues.row.id}`}>
-            <button>Info</button>
-          </Link>
-        );
-      },
+        headerName: "Update Info",
+        flex: 1,
+        sortable: false,
+        editable: false,
+        minWidth: 100,
+        renderCell: (cellValues) => {
+          return (
+            <Link to={`/readAppointment/${cellValues.row.id}`}>
+              <button>Info</button>
+            </Link>
+          );
+        },
       },
       {
-      field: "cancel",
-      headerName: "Cancel/Enable Appointment",
-      flex: 1,
-      sortable: false,
-      editable: false,
-      minWidth: 200,
-      renderCell: (cellValues) => {
-        return (
-            <button onClick={(e:any)=>{ 
-              e = Number(cellValues.row.id)
-              if(cellValues.row.active === "true")
-              {
-
-                dispatch(enableAppointment(e))
-                dispatch(fetchDoctorAppointments("is_deleted=true"))
-              }
-              
-            }
-          }>Cancel/Enable</button>
-        );
-      },
+        field: "cancel",
+        headerName: "Cancel/Enable Appointment",
+        flex: 1,
+        sortable: false,
+        editable: false,
+        minWidth: 200,
+        renderCell: (cellValues) => {
+          return (
+            <button
+              onClick={(e: any) => {
+                e = Number(cellValues.row.id);
+                if (cellValues.row.active === "true") {
+                  dispatch(enableAppointment(e));
+                  dispatch(fetchDoctorAppointments("is_deleted=true"));
+                }
+              }}
+            >
+              Cancel/Enable
+            </button>
+          );
+        },
       }
-      
-
-
     );
   } else if (roleUser === "patient") {
     list = appointment.map((value) => ({
@@ -165,34 +153,38 @@ const AppointmentsHistory = () => {
       doctor: doctors[value.doctorId - 1].firstName,
     }));
 
-    columns.push({
-      field: "doctor",
-      headerName: "Doctor",
-      flex: 1,
-      editable: false,
-      minWidth: 100,
-    },{
-      field: "cancel",
-      headerName: "Cancel/Enable Appointment",
-      flex: 1,
-      sortable: false,
-      editable: false,
-      minWidth: 200,
-      renderCell: (cellValues) => {
-        return (
-            <button onClick={(e:any)=>{ 
-              e = Number(cellValues.row.id)
-              if(cellValues.row.active === "true")
-              {
-                dispatch(enableAppointment(e))
-                dispatch(fetchPatientAppointments("is_deleted=true"));
-              }
-              
-            }
-          }>Cancel/Enable</button>
-        );
+    columns.push(
+      {
+        field: "doctor",
+        headerName: "Doctor",
+        flex: 1,
+        editable: false,
+        minWidth: 100,
       },
-    });
+      {
+        field: "cancel",
+        headerName: "Cancel/Enable Appointment",
+        flex: 1,
+        sortable: false,
+        editable: false,
+        minWidth: 200,
+        renderCell: (cellValues) => {
+          return (
+            <button
+              onClick={(e: any) => {
+                e = Number(cellValues.row.id);
+                if (cellValues.row.active === "true") {
+                  dispatch(enableAppointment(e));
+                  dispatch(fetchPatientAppointments("is_deleted=true"));
+                }
+              }}
+            >
+              Cancel/Enable
+            </button>
+          );
+        },
+      }
+    );
   } else if (roleUser === "admin") {
     list = appointment.map((value) => ({
       id: value.id,
@@ -218,8 +210,6 @@ const AppointmentsHistory = () => {
       minWidth: 100,
     });
   }
- 
-
 
   return (
     <div className="appointment">
@@ -238,7 +228,9 @@ const AppointmentsHistory = () => {
           </div>
           <label>Want to see upcoming appointments?</label>
           <label>Click here!</label>
-          <Link to={"/dashboard/appointments"}><button>Upcoming Appointments</button></Link>
+          <Link to={"/dashboard/appointments"}>
+            <button>Upcoming Appointments</button>
+          </Link>
         </div>
       </div>
     </div>

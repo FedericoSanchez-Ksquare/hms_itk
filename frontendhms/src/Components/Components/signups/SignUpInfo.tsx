@@ -23,9 +23,9 @@ const SignUpInfo = () => {
     try {
       dispatch(createPatient(values));
       navigate("/");
-      alert("Patient created")
+      alert("Patient created");
     } catch (error) {
-      alert("Bad sign up")
+      alert("Bad sign up");
     }
   };
 
@@ -34,7 +34,10 @@ const SignUpInfo = () => {
       <NavBar />
       <div className="general_container">
         <div className="sign_area">
-          <form className="form_style_patient" onSubmit={handleSubmit(createPatients)}>
+          <form
+            className="form_style_patient"
+            onSubmit={handleSubmit(createPatients)}
+          >
             <div className="top-form">
               <label>Create Account</label>
             </div>
@@ -45,68 +48,63 @@ const SignUpInfo = () => {
               type="text"
               placeholder="Enter your first Name"
               {...register("firstName")}
-              required = {true}
+              required={true}
             />
             <label>Last Name</label>
             <input
               type="text"
               placeholder="Enter your last Name"
               {...register("lastName")}
-              required = {true}
+              required={true}
             />
             <br />
             <div className="patient_bot_info">
-               <label>Weight</label>
-            <input
-              type={"number"}
-              id="weight"
-              placeholder="Input your Weight"
-              {...register("weigth", {
-                validate: (value) => value !== 0 || "Input valid weight!",
-              })}
-              required = {true}
-            />
+              <label>Weight</label>
+              <input
+                type={"number"}
+                id="weight"
+                placeholder="Input your Weight"
+                {...register("weigth", {
+                  validate: (value) => value !== 0 || "Input valid weight!",
+                })}
+                required={true}
+              />
 
-            <label>Height</label>
-            <input
-              type={"number"}
-              id="height"
-              placeholder="Input your Height"
-              {...register("height", {
-                validate: (value) => value !== 0 || "Input valid weight!",
-              })}
-              required = {true}
-            />
-
-
+              <label>Height</label>
+              <input
+                type={"number"}
+                id="height"
+                placeholder="Input your Height"
+                {...register("height", {
+                  validate: (value) => value !== 0 || "Input valid weight!",
+                })}
+                required={true}
+              />
             </div>
             <br />
             <div className="patient_bot_info">
               <label>Birth</label>
-            <input
-              placeholder="Input your Birth"
-              id="birth"
-              type={"date"}
-              {...register("birth", {
-                validate: (value) => value !== 0 || "Input valid Birth!",
-              })}
-              required = {true}
-            />
+              <input
+                placeholder="Input your Birth"
+                id="birth"
+                type={"date"}
+                {...register("birth", {
+                  validate: (value) => value !== 0 || "Input valid Birth!",
+                })}
+                required={true}
+              />
 
-            <label>Gender</label>
-            <input
-              placeholder="Input your Gender"
-              id="gender"
-              {...register("gender", {
-                validate: (value) => value !== 0 || "Input valid Gender!",
-              })}
-              required = {true}
-            />
-
+              <label>Gender</label>
+              <input
+                placeholder="Input your Gender"
+                id="gender"
+                {...register("gender", {
+                  validate: (value) => value !== 0 || "Input valid Gender!",
+                })}
+                required={true}
+              />
             </div>
-            
 
-            
             <br />
             <label>Address</label>
             <input
@@ -114,7 +112,7 @@ const SignUpInfo = () => {
               placeholder="Enter your Address"
               id="address"
               {...register("address")}
-              required = {true}
+              required={true}
             />
             <br />
             <div className="bottom-form">

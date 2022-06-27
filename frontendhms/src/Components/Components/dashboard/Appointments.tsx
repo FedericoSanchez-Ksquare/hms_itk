@@ -11,17 +11,16 @@ import {
   enableAppointment,
 } from "../../slices/appointmentsSlice";
 import Sidebar, { RoleAuth } from "../Sidebar";
-import { authStatus, selectUID } from "../../slices/authSlice";
+import { authStatus } from "../../slices/authSlice";
 import { showDoctors } from "../../slices/doctorSlice";
 import { useForm } from "react-hook-form";
 
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { fetchAllPatients, readPatient, showPatients } from "../../slices/patientSlice";
+import { fetchAllPatients, showPatients } from "../../slices/patientSlice";
 
 
 const Appointments = () => {
   const dispatch = useAppDispatch();
-  const loginStatus = useAppSelector(authStatus);
   const roleUser = RoleAuth();
 
   const {

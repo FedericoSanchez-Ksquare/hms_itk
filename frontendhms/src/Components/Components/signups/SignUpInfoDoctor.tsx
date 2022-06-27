@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { createDoctor, doctorStatus, IDoctor } from "../../slices/doctorSlice";
 import Sidebar from "../Sidebar";
 
-
 const SignUpInfo = () => {
   const {
     handleSubmit,
@@ -15,19 +14,18 @@ const SignUpInfo = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const status = useAppSelector(doctorStatus)
+  const status = useAppSelector(doctorStatus);
 
   const createDoctors = async (values: Partial<IDoctor>) => {
     try {
       dispatch(createDoctor(values));
-      if(status === "failed")
-      {
-        alert("doctor creation failed")
-      }else{
-        navigate("/dashboard/admin/doctors")
+      if (status === "failed") {
+        alert("doctor creation failed");
+      } else {
+        navigate("/dashboard/admin/doctors");
       }
     } catch (error) {
-      alert("Bad sign up, try again!")
+      alert("Bad sign up, try again!");
     }
   };
 
@@ -42,29 +40,38 @@ const SignUpInfo = () => {
               <label>Create Account</label>
             </div>
             <br />
-              <label>First Name</label>
-              <input type="text" placeholder="Enter your first Name"
+            <label>First Name</label>
+            <input
+              type="text"
+              placeholder="Enter your first Name"
               {...register("firstName")}
-              required = {true} />
-              <br />
-              <br />
-              <label>Last Name</label>
-              <input type="text" placeholder="Enter your last Name"
+              required={true}
+            />
+            <br />
+            <br />
+            <label>Last Name</label>
+            <input
+              type="text"
+              placeholder="Enter your last Name"
               {...register("lastName")}
-              required = {true} />
-              <br />
-              <br />
-              <label>Medical Speciality</label>
-              <input type="text" placeholder="Enter your speciality"
+              required={true}
+            />
+            <br />
+            <br />
+            <label>Medical Speciality</label>
+            <input
+              type="text"
+              placeholder="Enter your speciality"
               {...register("medicalSpeciality")}
-              required = {true} />
+              required={true}
+            />
             <br />
             <div className="bottom-form">
               <input type={"submit"} value="Sign Up" />
             </div>
           </form>
-          </div>
-          </div>
+        </div>
+      </div>
     </div>
   );
 };

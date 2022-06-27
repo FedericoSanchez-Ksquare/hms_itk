@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import NavBar from "../NavBar";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { createAppointment, IAppointment } from "../../slices/appointmentsSlice";
+import {
+  createAppointment,
+  IAppointment,
+} from "../../slices/appointmentsSlice";
 import Sidebar from "../Sidebar";
 import { useNavigate } from "react-router-dom";
 import { doctorSelection, showDoctors } from "../../slices/doctorSlice";
@@ -40,9 +43,14 @@ const CreateAppointments = () => {
     navigate("/dashboard/appointments");
   };
 
-  let date = new Date()
+  let date = new Date();
 
- let myDate = (date.getUTCFullYear()) + "-" + ("0" + (date.getMonth() + 1)).slice(-2)+ "-" + ("0"+date.getUTCDate()).slice(-2);
+  let myDate =
+    date.getUTCFullYear() +
+    "-" +
+    ("0" + (date.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("0" + date.getUTCDate()).slice(-2);
 
   return (
     <>
@@ -60,25 +68,23 @@ const CreateAppointments = () => {
                 <br />
                 <div>
                   <label>Appointment Date </label>
-                <input
-                  type="date"
-                  placeholder="Choose a date"
-                  {...register("appointmentDate", {
-                    validate: (value) => value >= myDate,
-                  })}
-                  required = {true}
-
-                />
-                <label>Appointment Time </label>
-                <input
-                  type="time"
-                  placeholder="Choose the time"
-                  {...register("appointmentTime",{
-                  })}
-                  required = {true}
-                />
+                  <input
+                    type="date"
+                    placeholder="Choose a date"
+                    {...register("appointmentDate", {
+                      validate: (value) => value >= myDate,
+                    })}
+                    required={true}
+                  />
+                  <label>Appointment Time </label>
+                  <input
+                    type="time"
+                    placeholder="Choose the time"
+                    {...register("appointmentTime", {})}
+                    required={true}
+                  />
                 </div>
-                
+
                 <br />
               </div>
               <br />
@@ -88,11 +94,10 @@ const CreateAppointments = () => {
               <input
                 type="text"
                 placeholder="Details of the appointment"
-                {...register("appointmentDetails",{
-                })}
-                required = {true}
+                {...register("appointmentDetails", {})}
+                required={true}
               />
-              
+
               <br />
               <div className="bottom-form">
                 <input type={"submit"} value="Create Appoinment" />

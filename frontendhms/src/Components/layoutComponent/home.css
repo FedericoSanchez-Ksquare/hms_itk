@@ -1,0 +1,280 @@
+.appinment{
+    display: flex;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.sidbar_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.placeholder1 {
+    display: flex;
+    flex-direction: column;
+    background-color: #373f51;
+    width: 100%;
+    height: 91.5vh;
+    justify-content: flex-end;
+    align-items: center;
+    background-image: url(../../img/doctors.jpg);
+    background-size: cover;
+}
+
+.placeholder2 {
+    width: 100%;
+    height: 45%;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 30vh;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgb(129, 210, 199, .5);
+    width: 350px;
+    height: 350px;
+    min-height: fit-content;
+    text-align: center;
+    border-radius: 15px;
+    border-style: solid;
+
+}
+.button_space {
+    display: flex;
+    width: 220px;
+    margin-right: 20px;
+    
+    justify-content: space-between;
+}
+.buttons_navbar{
+    border-style: none;
+    font-size: 20px;
+    font-weight: bolder;
+    color: white;
+    background-color: #7389ae;
+    cursor: pointer;
+    border-style: solid;
+    border-radius: 10px;
+    width: 100px;
+}
+
+button {
+    padding: 10px;
+    
+}
+
+.general_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+}
+.generalUsers_container {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+/* appointments */
+
+.filter_position{
+    display: flex;
+    flex-direction: column;
+}
+
+.appointment_container {
+    background-color: beige;
+    border-style: solid;
+    border-radius: 10px;
+    width: 80%;
+
+}
+
+
+.appointment_area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+.sign_area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    height: 85vh;
+    margin-top: 20px;
+}
+
+.appointment_card {
+    align-items: center;
+    border-style: solid;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: beige;
+    width: 50%;
+}
+.patients_card {
+    border-style: solid;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: beige;
+    width: 50%;
+}
+.profiles_card {
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    border-style: solid;
+    width: 100%;
+}
+
+
+.nav-bar {
+    display: flex;
+    background-color: #7389ae;
+    height: 80px;
+    justify-content: end;
+    align-items: center;
+}
+
+.top-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #d8dbe2;
+    border-radius: 10px;
+    text-align: center;
+    padding: 30px;
+}
+
+.bottom-form {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.form_style {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 300px;
+    background-color: #58a4b0;
+    border-radius: 10px;
+    padding: 20px;
+}
+.form_style_patient {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 600px;
+    background-color: #58a4b0;
+    border-radius: 10px;
+    padding: 20px;
+}
+.patient_bot_info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+input {
+    padding: 10px;
+    margin-top: 10px;
+}
+
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    background-color: #7389ae;
+    width: 300px;
+    height: 95vh;
+}
+
+.users_container {
+    background-color: beige;
+    border-style: solid;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.users_area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    gap: 15px;
+    width: 100%;
+}
+
+
+
+.size{
+    height: 400px;
+    width: 50%;
+}
+
+.filter_form{
+    width: fit-content;
+    height: fit-content;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #373f51;
+    padding: 15px;
+}
+
+img{
+    width: 70px;
+    height: 70px;
+    justify-content: center;
+    background-size: cover;
+}
+
+.card_top{
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+.btn_dashboard{
+    background-color: #7389ae;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.sidebar_content{
+    text-align: center;
+}
+
+.sidebar_buttons{
+    font-weight: bolder;
+    background-color: #81d2c7;
+    margin: 20px;
+    width: 199px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    border-style: solid;
+    cursor: pointer;
+}

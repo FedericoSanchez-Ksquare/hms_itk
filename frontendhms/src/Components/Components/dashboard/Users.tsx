@@ -71,7 +71,7 @@ const Users = () => {
         <div className="appointment_area">
           <div className="size">
             <DataGrid
-              sx={{ boxShadow: 2, border: 2, bgcolor: "beige" }}
+              sx={{ boxShadow: 2, border: 2, bgcolor: "#81d2c7" }}
               rows={list}
               columns={columns}
               pageSize={5}

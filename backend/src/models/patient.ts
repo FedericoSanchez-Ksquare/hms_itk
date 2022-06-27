@@ -45,7 +45,8 @@ export const initPatientModel = (sequelize: Sequelize) =>{
             type: DataTypes.STRING(100),
         },
         userId:{
-            type: DataTypes.STRING(100)
+            type: DataTypes.STRING(100),
+            
         }
     },{
         tableName: 'patients',

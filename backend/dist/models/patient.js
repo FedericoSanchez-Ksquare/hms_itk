@@ -37,7 +37,7 @@ const initPatientModel = (sequelize) => {
             type: sequelize_1.DataTypes.STRING(100),
         },
         userId: {
-            type: sequelize_1.DataTypes.STRING(100)
+            type: sequelize_1.DataTypes.STRING(100),
         }
     }, {
         tableName: 'patients',

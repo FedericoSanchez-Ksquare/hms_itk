@@ -29,7 +29,8 @@ export const initDoctorModel = (sequelize: Sequelize) =>{
             allowNull: false
         },
         userId:{
-            type: DataTypes.STRING(100)
+            type: DataTypes.STRING(100),
+            
         }
 
     },{

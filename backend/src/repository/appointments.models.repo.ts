@@ -56,14 +56,11 @@ export const listAppointmentsPatient = async(
       where.is_deleted = queryParams.is_deleted
     }
 
-    if (patientId === validation?.patientId) {
+
       const readAllAppointmentsP = await appointment.findAll({order: ['id'],where, limit, offset});
       return readAllAppointmentsP
-    }
-    else{
-      return "Invalid id"
-    }
-  
+
+
   } catch (error) {
     throw new Error("Couldn't find patient appointments");
   }

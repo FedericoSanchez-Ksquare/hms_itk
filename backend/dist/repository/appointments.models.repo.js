@@ -58,13 +58,8 @@ const listAppointmentsPatient = (patientId, queryParams, limit, offset) => __awa
         if (queryParams.is_deleted) {
             where.is_deleted = queryParams.is_deleted;
         }
-        if (patientId === (validation === null || validation === void 0 ? void 0 : validation.patientId)) {
-            const readAllAppointmentsP = yield appointment_1.appointment.findAll({ order: ['id'], where, limit, offset });
-            return readAllAppointmentsP;
-        }
-        else {
-            return "Invalid id";
-        }
+        const readAllAppointmentsP = yield appointment_1.appointment.findAll({ order: ['id'], where, limit, offset });
+        return readAllAppointmentsP;
     }
     catch (error) {
         throw new Error("Couldn't find patient appointments");

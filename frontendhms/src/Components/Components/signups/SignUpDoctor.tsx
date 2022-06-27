@@ -32,7 +32,7 @@ const SignUpDoctor = () => {
         navigate("/SignUpInfo");
       }
     } catch (error) {
-      alert("Bad sign up, try again!")
+      alert("Bad sign up, try again!");
     }
   };
 
@@ -51,8 +51,8 @@ const SignUpDoctor = () => {
                 <div className="top-form">
                   <label>Create Doctor Account</label>
                 </div>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <label>Email</label>
                 <input
                   type="email"
@@ -64,7 +64,7 @@ const SignUpDoctor = () => {
                       message: "invalid email address",
                     },
                   })}
-                  required = {true}
+                  required={true}
                 />
                 {errors.email && errors.email.message}
                 <br />
@@ -74,7 +74,7 @@ const SignUpDoctor = () => {
                   {...register("displayName", {
                     validate: (value) => value !== "admin" || "nice try!",
                   })}
-                  required = {true}
+                  required={true}
                 />
                 <br />
                 <br />
@@ -85,7 +85,7 @@ const SignUpDoctor = () => {
                   placeholder="Enter your password"
                   id="password"
                   {...register("password")}
-                  required = {true}
+                  required={true}
                 />
                 <br />
                 <div className="bottom-form">

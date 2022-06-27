@@ -1,9 +1,8 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import { selectUID, selectEMAIL, authStatus } from "../../slices/authSlice";
+import { authStatus } from "../../slices/authSlice";
 import { fetchDoctors, showDoctors } from "../../slices/doctorSlice";
-import { userRole } from "../../slices/userSlice";
 import NavBar from "../NavBar";
 import Sidebar from "../Sidebar";
 

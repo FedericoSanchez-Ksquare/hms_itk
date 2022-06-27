@@ -1,8 +1,6 @@
-import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { RootState } from "../../app/store";
-import { IDoctor } from "./doctorSlice";
 
 export interface IAppointment{
     id: number,

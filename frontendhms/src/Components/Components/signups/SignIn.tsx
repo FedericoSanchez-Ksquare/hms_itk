@@ -2,14 +2,11 @@ import { useForm } from "react-hook-form";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseConfig } from "../../firebaseconf";
 import { initializeApp } from "firebase/app";
-import {  loginSuccess } from "../../slices/authSlice";
-import {
-  IUser,
-} from "../../slices/userSlice";
+import { loginSuccess } from "../../slices/authSlice";
+import { IUser } from "../../slices/userSlice";
 import { useAppDispatch } from "../../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../NavBar";
-import { readPatient } from "../../slices/patientSlice";
 
 const SignIn = () => {
   const firebaseApp = initializeApp(firebaseConfig);
@@ -24,7 +21,6 @@ const SignIn = () => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
 
   const LoginFB = async (values: Partial<IUser>) => {
     try {
@@ -43,10 +39,10 @@ const SignIn = () => {
           isDisabled: false,
         })
       );
-      
+
       navigate("/dashboard");
     } catch (error) {
-      alert("bad login")
+      alert("bad login");
     }
   };
   return (
@@ -65,8 +61,8 @@ const SignIn = () => {
               type="email"
               placeholder="Enter your email"
               id="email"
-              {...register("email") }
-            required =  {true}
+              {...register("email")}
+              required={true}
             />
             {errors.email && errors.email.message}
             <br />
@@ -74,7 +70,7 @@ const SignIn = () => {
             <input
               type="password"
               {...register("password")}
-              required = {true}
+              required={true}
               placeholder="Enter your password"
             />
             <br />

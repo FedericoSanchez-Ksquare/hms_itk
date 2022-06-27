@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
-import { useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
 
 export interface IUser{
